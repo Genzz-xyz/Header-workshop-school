@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SMK NURUL FALAH | SISTEM INFORMASI</title>
     <style>
-        /* 1. CONFIG VISUAL (TEMA MATRIX TETAP ADA, TAPI LEBIH BERSIH) */
+        /* 1. CONFIG VISUAL */
         :root {
             --neon: #00FF41;          
             --neon-dark: #003300;     
             --bg-color: #000000;      
             --glass: rgba(0, 10, 0, 0.9); 
-            --font-main: 'Courier New', monospace; /* Font tetap Matrix */
+            --font-main: 'Courier New', monospace;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -26,7 +26,7 @@
         }
 
         /* 2. BACKGROUND */
-        canvas#matrix-bg { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.6; } /* Opacity dikurangi agar teks lebih terbaca */
+        canvas#matrix-bg { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.5; }
         .scanlines { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
@@ -38,12 +38,13 @@
             position: fixed; inset: 0; background: black; z-index: 9999;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             transition: opacity 0.8s ease-out;
+            padding: 20px; text-align: center;
         }
         .btn-start {
             border: 2px solid var(--neon); background: transparent; color: var(--neon);
-            padding: 15px 40px; font-size: 1.1rem; font-weight: bold; letter-spacing: 2px;
+            padding: 15px 30px; font-size: 1rem; font-weight: bold; letter-spacing: 2px;
             cursor: pointer; text-transform: uppercase; box-shadow: 0 0 15px var(--neon-dark);
-            transition: 0.2s; margin-bottom: 20px;
+            transition: 0.2s; margin-bottom: 20px; margin-top: 20px;
         }
         .btn-start:active { background: var(--neon); color: black; box-shadow: 0 0 40px var(--neon); }
 
@@ -59,82 +60,72 @@
             border-radius: 5px; position: relative;
         }
         
-        /* Tombol Musik Manual di Header */
+        /* TOMBOL MUSIK MANUAL (SOLUSI JIKA OTOMATIS GAGAL) */
         .music-toggle {
             position: absolute; top: 10px; right: 10px;
-            font-size: 0.7rem; border: 1px solid var(--neon); padding: 5px 10px;
-            cursor: pointer; background: black;
+            font-size: 0.6rem; border: 1px solid var(--neon); padding: 5px 8px;
+            cursor: pointer; background: black; z-index: 20;
         }
         .music-toggle:active { background: var(--neon); color: black; }
 
-        h1 { 
-            margin: 0; font-size: 1.8rem; text-transform: uppercase; 
-            margin-bottom: 5px;
-        }
-        
-        .subtitle { font-size: 1rem; font-weight: bold; border-top: 1px solid var(--neon-dark); display: inline-block; padding-top: 5px; }
+        h1 { margin: 0; font-size: 1.6rem; text-transform: uppercase; margin-bottom: 5px; }
+        .subtitle { font-size: 0.9rem; font-weight: bold; border-top: 1px solid var(--neon-dark); display: inline-block; padding-top: 5px; }
 
-        /* 5. NAVIGASI (TOMBOL MENU) */
+        /* 5. NAVIGASI */
         nav { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
         .nav-btn {
             background: rgba(0, 20, 0, 0.6); color: var(--neon); border: 1px solid var(--neon-dark);
-            padding: 10px 20px; cursor: pointer; font-family: inherit; font-weight: bold; font-size: 0.9rem;
+            padding: 10px 15px; cursor: pointer; font-family: inherit; font-weight: bold; font-size: 0.8rem;
             transition: 0.3s;
         }
         .nav-btn:hover, .nav-btn.active {
             background: var(--neon); color: black; box-shadow: 0 0 10px var(--neon);
         }
 
-        /* 6. KONTEN HALAMAN */
+        /* 6. KONTEN */
         .slide {
             display: none; background: rgba(0, 10, 0, 0.85); border: 1px solid var(--neon-dark);
-            padding: 30px; border-radius: 5px; animation: fadeIn 0.5s ease-out;
-            line-height: 1.6; /* Spasi antar baris agar mudah dibaca guru */
+            padding: 20px; border-radius: 5px; animation: fadeIn 0.5s ease-out;
+            line-height: 1.6; font-size: 0.95rem;
         }
         .slide.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Judul Halaman (Bersih tanpa //) */
         h2 { 
             border-bottom: 1px solid var(--neon); padding-bottom: 10px; 
-            margin-top: 0; font-size: 1.5rem; color: white; margin-bottom: 20px;
+            margin-top: 0; font-size: 1.3rem; color: white; margin-bottom: 15px;
         }
 
-        /* 7. TEXT BERJALAN (MARQUEE) - FORMAL */
+        /* 7. MARQUEE */
         .marquee-box {
             border: 1px solid var(--neon-dark); padding: 8px;
             background: rgba(0, 30, 0, 0.5); font-weight: bold; color: white;
-            margin-top: 20px; font-size: 0.9rem;
+            margin-top: 20px; font-size: 0.8rem;
         }
 
         /* 8. GALERI */
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 20px; }
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 20px; }
         .gallery-item {
-            border: 1px solid var(--neon-dark); position: relative; height: 180px; overflow: hidden;
+            border: 1px solid var(--neon-dark); position: relative; height: 150px; overflow: hidden;
             border-radius: 5px; transition: all 0.3s ease;
         }
-        .gallery-item:hover { 
-            border-color: var(--neon); transform: scale(1.02); 
-            box-shadow: 0 0 10px var(--neon); z-index: 2;
-        }
+        .gallery-item:hover { border-color: var(--neon); transform: scale(1.02); box-shadow: 0 0 10px var(--neon); z-index: 2; }
         .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
-        
-        /* Caption Foto (Formal) */
         .caption {
             position: absolute; bottom: 0; left: 0; width: 100%;
             background: rgba(0,0,0,0.9); color: white;
-            font-size: 0.75rem; padding: 5px; text-align: center; border-top: 1px solid var(--neon-dark);
+            font-size: 0.6rem; padding: 4px; text-align: center; border-top: 1px solid var(--neon-dark);
         }
 
-        /* 9. KOMPETENSI KEAHLIAN */
-        .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        /* 9. KOMPETENSI */
+        .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
         .comp-btn {
-            padding: 15px; border: 1px solid var(--neon-dark); background: rgba(0,20,0,0.3); 
-            color: var(--neon); cursor: pointer; text-align: left; font-family: inherit; font-weight: bold;
+            padding: 12px; border: 1px solid var(--neon-dark); background: rgba(0,20,0,0.3); 
+            color: var(--neon); cursor: pointer; text-align: left; font-family: inherit; font-weight: bold; font-size: 0.8rem;
         }
         .comp-btn.active-comp { background: var(--neon); color: black; }
         .desc-box {
-            border: 1px solid var(--neon); padding: 20px; min-height: 80px; background: rgba(0,0,0,0.3); font-size: 1rem; color: white;
+            border: 1px solid var(--neon); padding: 15px; min-height: 80px; background: rgba(0,0,0,0.3); font-size: 0.9rem; color: white;
         }
         
         footer { text-align: center; margin-top: 40px; font-size: 0.8rem; opacity: 0.8; padding-bottom: 20px; border-top: 1px solid var(--neon-dark); padding-top: 20px; }
@@ -150,19 +141,20 @@
     </audio>
 
     <div id="overlay">
-        <div style="font-size: 3rem; margin-bottom: 20px;">🔒</div>
-        <p style="margin-bottom: 30px; letter-spacing: 2px; font-weight: bold;">SISTEM INFORMASI BDP</p>
+        <div style="font-size: 3rem; margin-bottom: 10px;">🔒</div>
+        <p style="margin-bottom: 10px; font-weight: bold;">PORTAL INFORMASI DIGITAL</p>
+        <p style="font-size: 0.9rem;">SMK NURUL FALAH</p>
         
-        <button class="btn-start" id="start-btn">MASUK KE WEBSITE</button>
+        <button class="btn-start" id="start-btn">MASUK WEBSITE</button>
         
-        <p id="music-status" style="font-size: 0.8rem; color: #888;">Klik tombol di atas untuk memulai</p>
+        <p id="music-status" style="font-size: 0.7rem; color: #888;">Klik tombol untuk akses data & suara</p>
     </div>
 
     <div class="container" id="main-content">
         <header>
             <div class="music-toggle" onclick="forcePlayMusic()">🔊 PUTAR MUSIK</div>
             <h1>SMK NURUL FALAH</h1>
-            <span class="subtitle">KELAS XI BDP - PEMASARAN</span>
+            <span class="subtitle">KOMPETENSI KEAHLIAN PEMASARAN (BDP)</span>
         </header>
 
         <nav>
@@ -174,75 +166,85 @@
 
         <div id="home" class="slide active">
             <h2>SELAMAT DATANG</h2>
-            <p>Selamat datang di portal informasi digital Kelas XI BDP. Website ini dirancang sebagai media pembelajaran interaktif untuk memudahkan akses informasi sekolah.</p>
+            <p>
+                Selamat datang di Official Website Kelas XI Bisnis Daring dan Pemasaran (BDP) SMK Nurul Falah. 
+                Website ini dikembangkan sebagai sarana informasi dan dokumentasi kegiatan pembelajaran berbasis digital.
+            </p>
+            <p style="margin-top: 10px;">
+                Kami berkomitmen mencetak tenaga kerja profesional yang siap menghadapi tantangan industri 4.0 dengan bekal kompetensi pemasaran modern.
+            </p>
             
             <div class="marquee-box">
-                <marquee scrollamount="6" direction="left">
-                    INFORMASI PENTING: Mohon kepada seluruh siswa untuk segera melengkapi tugas Produk Kreatif sebelum tanggal 25 Januari. Tetap semangat belajar!
+                <marquee scrollamount="5" direction="left">
+                    PENGUMUMAN: Ujian Kompetensi Keahlian (UKK) akan segera dilaksanakan. Persiapkan portofolio produk kreatif Anda sebaik mungkin!
                 </marquee>
             </div>
         </div>
 
         <div id="visi" class="slide">
             <h2>VISI DAN MISI</h2>
-            <p><strong>VISI:</strong><br>Menjadikan lulusan yang kompeten, berakhlak mulia, dan siap bersaing di era digital.</p>
+            <p><strong>VISI:</strong><br>
+            Mewujudkan lulusan SMK Nurul Falah yang Berakhlak Mulia, Kompeten, Unggul dalam IPTEK, dan Siap Kerja.</p>
+            
             <hr style="border: 0; border-top: 1px solid var(--neon-dark); margin: 15px 0;">
-            <p><strong>MISI:</strong></p>
+            
+            <p><strong>MISI KEAHLIAN PEMASARAN:</strong></p>
             <ul>
-                <li>Mengembangkan kemampuan berbicara di depan umum (Public Speaking).</li>
-                <li>Menguasai teknik Pemasaran Digital (Digital Marketing) terkini.</li>
-                <li>Menumbuhkan jiwa kewirausahaan (Entrepreneur) yang tangguh.</li>
+                <li>Membekali peserta didik dengan keterampilan Bisnis Daring dan Pemasaran (Digital Marketing).</li>
+                <li>Menanamkan jiwa wirausaha (Entrepreneurship) yang kreatif dan inovatif.</li>
+                <li>Meningkatkan kemampuan komunikasi bisnis dan pelayanan prima.</li>
             </ul>
         </div>
 
         <div id="prodi" class="slide">
-            <h2>KOMPETENSI KEAHLIAN</h2>
-            <p style="margin-bottom: 15px;">Silakan pilih modul materi di bawah ini untuk melihat deskripsi:</p>
+            <h2>MODUL PEMBELAJARAN</h2>
+            <p style="margin-bottom: 15px; font-size: 0.8rem;">Klik tombol di bawah untuk melihat ringkasan materi:</p>
             <div class="comp-grid">
                 <button class="comp-btn" onclick="showDetail(this, 'dm')">DIGITAL MARKETING</button>
                 <button class="comp-btn" onclick="showDetail(this, 'rb')">RETAIL BUSINESS</button>
                 <button class="comp-btn" onclick="showDetail(this, 'ps')">PUBLIC SPEAKING</button>
-                <button class="comp-btn" onclick="showDetail(this, 'web')">WEB DEVELOPMENT</button>
+                <button class="comp-btn" onclick="showDetail(this, 'kwu')">PRODUK KREATIF</button>
             </div>
             <div id="desc-output" class="desc-box">
-                Silakan klik salah satu tombol materi di atas.
+                [ Menunggu Input... ]
             </div>
         </div>
 
         <div id="gallery" class="slide">
             <h2>DOKUMENTASI KEGIATAN</h2>
-            <p style="font-size: 0.8rem; color:#ccc; margin-bottom: 10px;">Arsip foto kegiatan siswa:</p>
+            <p style="font-size: 0.7rem; color:#ccc; margin-bottom: 10px;">Arsip Foto Kegiatan Siswa BDP:</p>
             <div class="gallery-grid">
                 <div class="gallery-item">
-                    <img src="img/foto1.jpg" alt="Foto 1" onerror="this.src='https://via.placeholder.com/300?text=FOTO+TIDAK+ADA'">
-                    <div class="caption">FOTO BERSAMA KELAS XI BDP</div>
+                    <img src="img/foto1.jpg" alt="Foto 1" onerror="this.src='https://via.placeholder.com/300?text=IMG+ERROR'">
+                    <div class="caption">KEGIATAN KELAS XI BDP</div>
                 </div>
                 <div class="gallery-item">
-                    <img src="img/foto2.jpg" alt="Foto 2" onerror="this.src='https://via.placeholder.com/300?text=FOTO+TIDAK+ADA'">
-                    <div class="caption">KEGIATAN BELAJAR 1</div>
+                    <img src="img/foto2.jpg" alt="Foto 2" onerror="this.src='https://via.placeholder.com/300?text=IMG+ERROR'">
+                    <div class="caption">PRAKTIK PEMASARAN</div>
                 </div>
                 <div class="gallery-item">
-                    <img src="img/foto3.jpg" alt="Foto 3" onerror="this.src='https://via.placeholder.com/300?text=FOTO+TIDAK+ADA'">
-                    <div class="caption">KEGIATAN BELAJAR 2</div>
+                    <img src="img/foto3.jpg" alt="Foto 3" onerror="this.src='https://via.placeholder.com/300?text=IMG+ERROR'">
+                    <div class="caption">KUNJUNGAN INDUSTRI</div>
                 </div>
                 <div class="gallery-item">
-                    <img src="img/foto4.jpg" alt="Foto 4" onerror="this.src='https://via.placeholder.com/300?text=FOTO+TIDAK+ADA'">
-                    <div class="caption">KEGIATAN BELAJAR 3</div>
+                    <img src="img/foto4.jpg" alt="Foto 4" onerror="this.src='https://via.placeholder.com/300?text=IMG+ERROR'">
+                    <div class="caption">KEGIATAN EKSTRAKURIKULER</div>
                 </div>
             </div>
         </div>
 
         <footer>
-             <a href="https://wa.me/6281234567890" target="_blank" style="text-decoration: none; color: var(--neon); font-weight: bold;">
-                HUBUNGI PENULIS (ARLING)
+            <p>Ingin bertanya lebih lanjut?</p>
+             <a href="https://wa.me/6283199753711" target="_blank" style="text-decoration: none; color: var(--neon); font-weight: bold; border: 1px solid var(--neon); padding: 10px; display: inline-block; margin-top: 5px;">
+                HUBUNGI PENULIS (WHATSAPP)
             </a> 
             <br><br>
-            SMK NURUL FALAH &copy; 2026
+            <div style="font-size: 0.7rem;">SMK NURUL FALAH &copy; 2026</div>
         </footer>
     </div>
 
     <script>
-        /* --- MATRIX BACKGROUND (Dibuat lebih halus) --- */
+        /* --- MATRIX EFFECT --- */
         const canvas = document.getElementById("matrix-bg");
         const ctx = canvas.getContext("2d");
         let drops = [];
@@ -266,37 +268,51 @@
         initMatrix();
         setInterval(drawMatrix, 50);
 
-        /* --- SISTEM AUDIO DAN NAVIGASI --- */
+        /* --- AUDIO & NAVIGATION SYSTEM --- */
         const startBtn = document.getElementById('start-btn');
         const overlay = document.getElementById('overlay');
         const mainContent = document.getElementById('main-content');
         const bgm = document.getElementById('bgm');
         const musicStatus = document.getElementById('music-status');
 
-        // Cek Error Musik
+        // 1. CEK FILE AUDIO (DIAGNOSA)
         bgm.addEventListener('error', function(e) {
-            alert("Sistem mendeteksi file musik tidak ditemukan. Pastikan nama folder di GitHub adalah 'img' (huruf kecil) dan ada file 'musik.mp3'.");
-            musicStatus.innerHTML = "<span style='color:red;'>Error: Musik Gagal Dimuat</span>";
+            // Jika masuk ke sini, berarti file musik TIDAK DITEMUKAN di server
+            musicStatus.innerHTML = "<span style='color:red; font-weight:bold;'>ERROR: File 'img/musik.mp3' Tidak Ditemukan!</span>";
+            alert("Sistem tidak bisa menemukan file musik. Pastikan folder di GitHub bernama 'img' (huruf kecil) dan di dalamnya ada 'musik.mp3'.");
         });
 
-        // Fungsi Putar Musik Manual
+        bgm.addEventListener('canplaythrough', function() {
+            // Jika masuk sini, file ada dan siap diputar
+            musicStatus.innerHTML = "File Audio Terdeteksi. Siap Diputar.";
+        });
+
+        // 2. FUNGSI PUTAR MANUAL
         function forcePlayMusic() {
             bgm.volume = 1.0;
             bgm.play().then(() => {
-                alert("Musik sedang diputar.");
+                alert("Musik Berhasil Diputar!");
             }).catch(e => {
-                alert("Browser memblokir musik atau file tidak ada. Coba klik lagi.");
+                alert("Browser memblokir musik. Coba klik sembarang tempat di layar lalu klik tombol ini lagi.");
             });
         }
 
+        // 3. TOMBOL START (PEMICU UTAMA)
         startBtn.addEventListener('click', () => {
-            // Usaha memutar musik otomatis
+            // Coba putar musik saat interaksi pertama
             bgm.volume = 1.0;
-            bgm.play().catch(error => {
-                console.log("Autoplay dicegah browser. Gunakan tombol manual.");
-            });
+            var promise = bgm.play();
+
+            if (promise !== undefined) {
+                promise.then(_ => {
+                    console.log("Autoplay started!");
+                }).catch(error => {
+                    console.log("Autoplay prevented.");
+                    // Jika gagal, tombol manual di header bisa dipakai
+                });
+            }
             
-            // Efek transisi masuk
+            // Animasi masuk
             overlay.style.opacity = '0';
             setTimeout(() => {
                 overlay.style.display = 'none';
@@ -311,19 +327,19 @@
             btn.classList.add('active');
         }
 
-        // DATA MATERI (Bahasa Formal)
+        // DATA MATERI NARASI SMK NURUL FALAH
         const materiData = {
-            'dm': 'Strategi pemasaran menggunakan media digital (Instagram, TikTok, FB Ads) untuk menjangkau audiens secara luas dan efektif.',
-            'rb': 'Manajemen bisnis ritel yang mencakup penataan produk (display), pengelolaan stok, hingga pelayanan prima kepada pelanggan.',
-            'ps': 'Seni berbicara di depan umum untuk meyakinkan audiens, mempresentasikan produk, dan melakukan negosiasi bisnis.',
-            'web': 'Dasar pengembangan website menggunakan HTML, CSS, dan JavaScript untuk membangun toko online yang fungsional.'
+            'dm': 'Pemanfaatan media digital (Social Media, Marketplace, SEO) untuk memperluas jangkauan pasar dan meningkatkan branding produk secara online.',
+            'rb': 'Pengelolaan operasional toko ritel modern, mulai dari manajemen stok (inventory), penataan produk (display), hingga strategi pelayanan pelanggan.',
+            'ps': 'Teknik komunikasi efektif di depan umum untuk keperluan presentasi bisnis, negosiasi, dan membangun kepercayaan klien.',
+            'kwu': 'Mata pelajaran Produk Kreatif dan Kewirausahaan (PKK) yang fokus pada pembuatan produk inovatif dan perencanaan bisnis rintisan (Start-up).'
         };
 
         function showDetail(btn, key) {
             document.querySelectorAll('.comp-btn').forEach(b => b.classList.remove('active-comp'));
             btn.classList.add('active-comp');
             const output = document.getElementById('desc-output');
-            output.innerHTML = `Sedang memuat data...`;
+            output.innerHTML = `Memuat Data...`;
             setTimeout(() => {
                 output.innerHTML = materiData[key];
             }, 300);
