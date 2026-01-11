@@ -33,13 +33,11 @@
         /* =========================================
            2. BACKGROUND & EFEK VISUAL
            ========================================= */
-        /* Kanvas Hujan Kode */
         canvas#matrix-bg { 
             position: fixed; top: 0; left: 0; z-index: -1; 
             opacity: 0.8; 
         }
         
-        /* Efek Garis TV (Scanlines) */
         .scanlines { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
@@ -73,11 +71,10 @@
         .container {
             position: relative; z-index: 10;
             max-width: 900px; margin: 0 auto; padding: 20px;
-            display: none; /* Disembunyikan sampai tombol Start diklik */
+            display: none; 
             padding-bottom: 100px;
         }
 
-        /* Header dengan Efek Glitch */
         header {
             text-align: center; border: 1px solid var(--neon);
             padding: 20px; margin-bottom: 20px; background: var(--glass);
@@ -140,21 +137,30 @@
         }
 
         /* =========================================
-           7. GALERI GRID
+           7. GALERI GRID (ENHANCED NEON)
            ========================================= */
         .gallery-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
             gap: 15px; margin-top: 20px;
         }
         .gallery-item {
-            border: 1px solid var(--neon-dark); position: relative; height: 200px; overflow: hidden;
-            transition: 0.3s;
+            border: 1px solid var(--neon-dark); 
+            position: relative; height: 200px; overflow: hidden;
+            border-radius: 10px; /* Sudut agak bulat */
+            transition: all 0.3s ease;
         }
+        
+        /* Efek Hover Neon Menyala */
         .gallery-item:hover { 
-            border-color: var(--neon); transform: scale(1.02); 
+            border-color: var(--neon); 
+            transform: scale(1.03); 
+            box-shadow: 0 0 15px var(--neon), 0 0 30px var(--neon-dark);
+            z-index: 2;
         }
+
         .gallery-item img { 
             width: 100%; height: 100%; object-fit: cover; opacity: 0.8; 
+            transition: 0.3s;
         }
         .gallery-item:hover img { opacity: 1; }
         
@@ -162,6 +168,7 @@
             position: absolute; bottom: 0; left: 0; width: 100%;
             background: rgba(0,0,0,0.8); color: var(--neon);
             font-size: 0.7rem; padding: 5px; text-align: center;
+            border-top: 1px solid var(--neon-dark);
         }
 
         /* =========================================
@@ -224,7 +231,7 @@
             <br>
             <div style="border: 1px solid var(--neon-dark); padding: 10px;">
                 <marquee scrollamount="4">
-                    [INFO] JANGAN LUPA MENGUMPULKAN TUGAS PRODUK KREATIF TANGGAL 25 JANUARI!
+                    [INFO] SELAMAT MENGERJAKAN PROJECT. JANGAN LUPA UPDATE PROGRESS DI GITHUB!
                 </marquee>
             </div>
         </div>
@@ -259,23 +266,29 @@
 
         <div id="gallery" class="slide">
             <h2>// DATABASE FOTO</h2>
-            <p style="font-size: 0.75rem; color:#888;">*Pastikan foto bernama foto1.jpg, foto2.jpg dst di folder img/</p>
+            <p style="font-size: 0.75rem; color:#888;">*Menampilkan data dari folder img/</p>
             
             <div class="gallery-grid">
                 <div class="gallery-item">
-                    <img src="img/foto1.jpg" alt="Kegiatan 1" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=FILE+MISSING'">
-                    <div class="caption">KEGIATAN_01.JPG</div>
+                    <img src="img/foto1.jpg" alt="Foto Kelas" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=404+ERROR'">
+                    <div class="caption">KELAS_XI_BDP.JPG</div>
                 </div>
 
                 <div class="gallery-item">
-                    <img src="img/foto2.jpg" alt="Kegiatan 2" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=FILE+MISSING'">
-                    <div class="caption">KEGIATAN_02.JPG</div>
+                    <img src="img/foto2.jpg" alt="Kegiatan 2" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=404+ERROR'">
+                    <div class="caption">ACTIVITY_LOG_02.JPG</div>
                 </div>
 
                 <div class="gallery-item">
-                    <img src="img/foto3.jpg" alt="Kegiatan 3" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=FILE+MISSING'">
-                    <div class="caption">KEGIATAN_03.JPG</div>
+                    <img src="img/foto3.jpg" alt="Kegiatan 3" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=404+ERROR'">
+                    <div class="caption">ACTIVITY_LOG_03.JPG</div>
                 </div>
+
+                <div class="gallery-item">
+                    <img src="img/foto4.jpg" alt="Kegiatan 4" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=404+ERROR'">
+                    <div class="caption">ACTIVITY_LOG_04.JPG</div>
+                </div>
+
             </div>
         </div>
 
@@ -285,7 +298,7 @@
     </div>
 
     <script>
-        /* --- 1. MATRIX ENGINE --- */
+        /* --- MATRIX ENGINE --- */
         const canvas = document.getElementById("matrix-bg");
         const ctx = canvas.getContext("2d");
         let drops = [];
@@ -314,15 +327,14 @@
         initMatrix();
         setInterval(drawMatrix, 50);
 
-        /* --- 2. LOGIKA UTAMA (AUDIO & NAVIGASI) --- */
+        /* --- LOGIKA AUDIO & NAVIGASI --- */
         const startBtn = document.getElementById('start-btn');
         const overlay = document.getElementById('overlay');
         const mainContent = document.getElementById('main-content');
         const bgm = document.getElementById('bgm');
 
-        // Tombol Start (Membuka Lockscreen & Play Musik)
         startBtn.addEventListener('click', () => {
-            bgm.volume = 0.6; // Volume 60%
+            bgm.volume = 0.6; 
             bgm.play().catch(e => console.log("Audio play failed:", e));
             
             overlay.style.opacity = '0';
@@ -332,7 +344,6 @@
             }, 800);
         });
 
-        // Navigasi Pindah Halaman
         function showSlide(id, btn) {
             document.querySelectorAll('.slide').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
@@ -340,7 +351,7 @@
             btn.classList.add('active');
         }
 
-        /* --- 3. DATA MATERI (Silakan Edit Teks Di Sini) --- */
+        /* --- DATA MATERI --- */
         const materiData = {
             'dm': 'Strategi pemasaran menggunakan media digital (IG, TikTok, FB Ads) untuk menjangkau audiens secara luas dan efektif.',
             'rb': 'Manajemen bisnis ritel mulai dari penataan produk (display), stok opname, hingga pelayanan prima kepada pelanggan.',
