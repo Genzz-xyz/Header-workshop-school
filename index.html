@@ -90,6 +90,250 @@
 
         /* 7. MARQUEE (TEKS BERJALAN) */
         .marquee-box {
+            border: 1px solid var(--neon-dark); padding: 10px;
+            background: rgba(0, 30, 0, 0.5); font-weight: bold; color: white;
+            margin-top: 20px; font-size: 1.2rem;
+            text-transform: uppercase; letter-spacing: 3px;
+        }
+
+        /* 8. GALERI */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-top: 20px; }
+        .gallery-item {
+            border: 1px solid var(--neon-dark); position: relative; height: 160px; overflow: hidden;
+            border-radius: 5px; transition: all 0.3s ease;
+        }
+        .gallery-item:hover { border-color: var(--neon); transform: scale(1.02); box-shadow: 0 0 10px var(--neon); z-index: 2; }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
+        .caption {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: rgba(0,0,0,0.9); color: white;
+            font-size: 0.6rem; padding: 5px; text-align: center; border-top: 1px solid var(--neon-dark);
+        }
+
+        /* 9. KOMPETENSI */
+        .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .comp-btn {
+            padding: 12px; border: 1px solid var(--neon-dark); background: rgba(0,20,0,0.3); 
+            color: var(--neon); cursor: pointer; text-align: left; font-family: inherit; font-weight: bold; font-size: 0.8rem;
+        }
+        .comp-btn.active-comp { background: var(--neon); color: black; }
+        .desc-box {
+            border: 1px solid var(--neon); padding: 15px; min-height: 80px; background: rgba(0,0,0,0.3); font-size: 0.9rem; color: white;
+        }
+        
+        footer { text-align: center; margin-top: 40px; font-size: 0.8rem; opacity: 0.8; padding-bottom: 20px; border-top: 1px solid var(--neon-dark); padding-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrix-bg"></canvas>
+    <div class="scanlines"></div>
+
+    <audio id="bgm" loop>
+        <source src="https://files.catbox.moe/mhpnl7.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="overlay">
+        <div style="font-size: 3rem; margin-bottom: 10px;">🔒</div>
+        <p style="margin-bottom: 10px; font-weight: bold;">PORTAL INFORMASI DIGITAL</p>
+        <p style="font-size: 0.9rem;">SMK NURUL FALAH</p>
+        
+        <button class="btn-start" id="start-btn">ACCESS DATA</button>
+        
+        <p style="font-size: 0.7rem; color: #888;">Klik tombol di atas untuk masuk</p>
+    </div>
+
+    <div class="container" id="main-content">
+        <header>
+            <h1>SMK NURUL FALAH</h1>
+            <span class="subtitle">KOMPETENSI KEAHLIAN PEMASARAN (BDP)</span>
+        </header>
+
+        <nav>
+            <button class="nav-btn active" onclick="showSlide('home', this)">BERANDA</button>
+            <button class="nav-btn" onclick="showSlide('visi', this)">VISI & MISI</button>
+            <button class="nav-btn" onclick="showSlide('prodi', this)">MATERI</button>
+            <button class="nav-btn" onclick="showSlide('gallery', this)">GALERI</button>
+        </nav>
+
+        <div id="home" class="slide active">
+            <h2>SELAMAT DATANG</h2>
+            <p>
+                Selamat datang di Website Kelas XI Bisnis Daring dan Pemasaran (BDP). 
+                Website ini difungsikan sebagai media informasi, arsip dokumentasi, dan pembelajaran digital siswa SMK Nurul Falah.
+            </p>
+            
+            <div class="marquee-box">
+                <marquee scrollamount="12" direction="left">
+                    SMK NUFA JAYA &nbsp;&bull;&nbsp; DISIPLIN &bull; KOMPETEN &bull; SIAP KERJA &nbsp;&bull;&nbsp; SMK NUFA JAYA
+                </marquee>
+            </div>
+        </div>
+
+        <div id="visi" class="slide">
+            <h2>VISI DAN MISI</h2>
+            <p><strong>VISI:</strong><br>
+            Mewujudkan lulusan SMK Nurul Falah yang Berakhlak Mulia, Kompeten, Unggul dalam IPTEK, dan Siap Kerja.</p>
+            <hr style="border: 0; border-top: 1px solid var(--neon-dark); margin: 15px 0;">
+            <p><strong>MISI KEAHLIAN PEMASARAN:</strong></p>
+            <ul>
+                <li>Membekali peserta didik dengan keterampilan Bisnis Daring dan Pemasaran (Digital Marketing).</li>
+                <li>Menanamkan jiwa wirausaha (Entrepreneurship) yang kreatif dan inovatif.</li>
+                <li>Meningkatkan kemampuan komunikasi bisnis dan pelayanan prima.</li>
+            </ul>
+        </div>
+
+        <div id="prodi" class="slide">
+            <h2>MODUL PEMBELAJARAN</h2>
+            <p style="margin-bottom: 15px; font-size: 0.8rem;">Klik tombol di bawah untuk melihat ringkasan materi:</p>
+            <div class="comp-grid">
+                <button class="comp-btn" onclick="showDetail(this, 'dm')">DIGITAL MARKETING</button>
+                <button class="comp-btn" onclick="showDetail(this, 'rb')">RETAIL BUSINESS</button>
+                <button class="comp-btn" onclick="showDetail(this, 'ps')">PUBLIC SPEAKING</button>
+                <button class="comp-btn" onclick="showDetail(this, 'kwu')">PRODUK KREATIF</button>
+            </div>
+            <div id="desc-output" class="desc-box">
+                [ Menunggu Input... ]
+            </div>
+        </div>
+
+        <div id="gallery" class="slide">
+            <h2>DOKUMENTASI KEGIATAN</h2>
+            <p style="font-size: 0.7rem; color:#ccc; margin-bottom: 10px;">Arsip Foto Kegiatan Siswa BDP:</p>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="img/foto1.jpg" alt="Foto 1" onerror="this.src='https://via.placeholder.com/300?text=IMG+ERROR'">
+                    <div class="caption">KEGIATAN KELAS XI BDP</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="img/foto2.jpg" alt="Foto 2" onerror="this.src='https://via.placeholder.com/300?text=IMG+ERROR'">
+                    <div class="caption">PENERIMAAN RAPORT</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="img/foto3.jpg" alt="Foto 3" onerror="this.src='https://via.placeholder.com/300?text=IMG+ERROR'">
+                    <div class="caption">KUNJUNGAN INDUSTRI</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="img/foto4.jpg" alt="Foto 4" onerror="this.src='https://via.placeholder.com/300?text=IMG+ERROR'">
+                    <div class="caption">KEGIATAN EKSTRAKURIKULER</div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Ingin bertanya lebih lanjut?</p>
+             <a href="https://wa.me/6283199753711" target="_blank" style="text-decoration: none; color: var(--neon); font-weight: bold; border: 1px solid var(--neon); padding: 10px; display: inline-block; margin-top: 5px;">
+                HUBUNGI PENULIS (WHATSAPP)
+            </a> 
+            <br><br>
+            <div style="font-size: 0.7rem;">SMK NURUL FALAH &copy; 2026</div>
+        </footer>
+    </div>
+
+    <script>
+        /* --- MATRIX EFFECT --- */
+        const canvas = document.getElementById("matrix-bg");
+        const ctx = canvas.getContext("2d");
+        let drops = [];
+        function initMatrix() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            drops = Array(Math.ceil(canvas.width / 20)).fill(1);
+        }
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; 
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#00FF41"; ctx.font = "15px monospace";
+            for (let i = 0; i < drops.length; i++) {
+                const text = String.fromCharCode(0x30A0 + Math.random() * 96);
+                ctx.fillText(text, i * 20, drops[i] * 20);
+                if (drops[i] * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        window.addEventListener('resize', initMatrix);
+        initMatrix();
+        setInterval(drawMatrix, 50);
+
+        /* --- AUDIO SYSTEM (AUTO START) --- */
+        const startBtn = document.getElementById('start-btn');
+        const overlay = document.getElementById('overlay');
+        const mainContent = document.getElementById('main-content');
+        const bgm = document.getElementById('bgm');
+
+        // LOGIKA AUTO PLAY SAAT KLIK 'ACCESS DATA'
+        const unlockAudio = () => {
+            bgm.volume = 1.0; 
+            
+            // Perintah play
+            var playPromise = bgm.play();
+
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    console.log("Musik Catbox Berhasil Diputar!");
+                })
+                .catch(error => {
+                    console.log("Auto-play dicegah browser. Coba klik lagi.");
+                    // Paksa load ulang jika gagal
+                    bgm.load();
+                    bgm.play();
+                });
+            }
+
+            // Animasi Masuk
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                mainContent.style.display = 'block';
+            }, 800);
+        };
+
+        // Event Listener (Click & Touch)
+        startBtn.addEventListener('click', unlockAudio);
+        startBtn.addEventListener('touchstart', unlockAudio);
+
+        function showSlide(id, btn) {
+            document.querySelectorAll('.slide').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        // DATA MATERI
+        const materiData = {
+            'dm': 'Pemanfaatan media digital (Social Media, Marketplace, SEO) untuk memperluas jangkauan pasar dan meningkatkan branding produk secara online.',
+            'rb': 'Pengelolaan operasional toko ritel modern, mulai dari manajemen stok (inventory), penataan produk (display), hingga strategi pelayanan pelanggan.',
+            'ps': 'Teknik komunikasi efektif di depan umum untuk keperluan presentasi bisnis, negosiasi, dan membangun kepercayaan klien.',
+            'kwu': 'Mata pelajaran Produk Kreatif dan Kewirausahaan (PKK) yang fokus pada pembuatan produk inovatif dan perencanaan bisnis rintisan (Start-up).'
+        };
+
+        function showDetail(btn, key) {
+            document.querySelectorAll('.comp-btn').forEach(b => b.classList.remove('active-comp'));
+            btn.classList.add('active-comp');
+            const output = document.getElementById('desc-output');
+            output.innerHTML = `Memuat Data...`;
+            setTimeout(() => {
+                output.innerHTML = materiData[key];
+            }, 300);
+        }
+    </script>
+</body>
+</html>
+        .slide {
+            display: none; background: rgba(0, 10, 0, 0.85); border: 1px solid var(--neon-dark);
+            padding: 20px; border-radius: 5px; animation: fadeIn 0.5s ease-out;
+            line-height: 1.6; font-size: 0.95rem;
+        }
+        .slide.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        h2 { 
+            border-bottom: 1px solid var(--neon); padding-bottom: 10px; 
+            margin-top: 0; font-size: 1.3rem; color: white; margin-bottom: 15px;
+        }
+
+        /* 7. MARQUEE (TEKS BERJALAN) */
+        .marquee-box {
             border: 1px solid var(--neon-dark); padding: 8px;
             background: rgba(0, 30, 0, 0.5); font-weight: bold; color: white;
             margin-top: 20px; font-size: 1.2rem; /* Font lebih besar agar terbaca */
