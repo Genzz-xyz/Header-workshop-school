@@ -2,22 +2,26 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SMK NURUL FALAH | SYSTEM V.FINAL</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
     <style>
-        /* --- 1. CORE CONFIGURATION --- */
+        /* --- 1. CONFIG VISUAL --- */
         :root {
-            --neon: #00FF41;          /* Hijau Matrix Utama */
-            --neon-glow: #008F11;     /* Hijau Glow Redup */
-            --bg-color: #050505;      /* Hitam Hampir Pekat */
-            --panel-bg: rgba(0, 20, 0, 0.85); /* Latar Panel Transparan */
-            --font-main: 'Courier New', monospace;
+            --neon: #0f0;             /* Hijau Terminal Standar */
+            --neon-dim: #008F11;      
+            --glitch-red: #ff003c;    /* Efek Glitch Merah */
+            --glitch-blue: #00f0ff;   /* Efek Glitch Biru */
+            --bg-color: #050505;      
+            --glass: rgba(0, 15, 0, 0.92); 
+            --font-main: 'Share Tech Mono', monospace; /* Font Baru */
         }
 
-        * { 
-            box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent; 
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             margin: 0; padding: 0;
@@ -26,191 +30,173 @@
             font-family: var(--font-main);
             overflow-x: hidden;
             min-height: 100vh;
+            font-size: 16px;
         }
 
-        /* --- 2. LAYER 1: MATRIX BACKGROUND (High Contrast) --- */
-        canvas#matrix-bg { 
-            position: fixed; top: 0; left: 0; 
-            z-index: -1; /* Paling belakang */
-            opacity: 0.9; /* Kontras tinggi */
-        }
+        /* --- 2. ADVANCED MATRIX BACKGROUND --- */
+        canvas#matrix-bg { position: fixed; top: 0; left: 0; z-index: -2; opacity: 0.4; }
         
-        /* Efek Garis TV (Scanlines) - pointer-events: none AGAR TEKS BISA DIKLIK */
         .scanlines { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
-            background-size: 100% 4px; 
-            pointer-events: none; /* KUNCI AGAR TIDAK MENGHALANGI KLIK */
-            z-index: 1; 
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                        linear-gradient(90deg, rgba(255,0,0,0.06), rgba(0,255,0,0.02), rgba(0,0,255,0.06));
+            background-size: 100% 3px, 3px 100%; pointer-events: none; z-index: -1; 
         }
 
-        /* --- 3. LOCKSCREEN (Only Visual, No Audio Logic) --- */
+        /* --- 3. GLITCH TEXT EFFECT (HACKER STYLE) --- */
+        .glitch-wrapper { position: relative; display: inline-block; }
+        .glitch {
+            position: relative; color: var(--neon); font-size: 2rem; 
+            letter-spacing: 3px; font-weight: bold; text-transform: uppercase;
+        }
+        .glitch::before, .glitch::after {
+            content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color);
+        }
+        .glitch::before {
+            left: 2px; text-shadow: -1px 0 var(--glitch-red); clip: rect(24px, 550px, 90px, 0);
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px; text-shadow: -1px 0 var(--glitch-blue); clip: rect(85px, 550px, 140px, 0);
+            animation: glitch-anim 2.5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(10px, 9999px, 30px, 0); transform: skew(0.5deg); }
+            20% { clip: rect(80px, 9999px, 100px, 0); transform: skew(0.3deg); }
+            40% { clip: rect(10px, 9999px, 80px, 0); transform: skew(0.8deg); }
+            60% { clip: rect(50px, 9999px, 20px, 0); transform: skew(0.2deg); }
+            80% { clip: rect(20px, 9999px, 90px, 0); transform: skew(0.6deg); }
+            100% { clip: rect(90px, 9999px, 10px, 0); transform: skew(0.4deg); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(60px, 9999px, 10px, 0); transform: skew(0.8deg); }
+            20% { clip: rect(20px, 9999px, 40px, 0); transform: skew(0.2deg); }
+            40% { clip: rect(90px, 9999px, 30px, 0); transform: skew(0.6deg); }
+            60% { clip: rect(10px, 9999px, 80px, 0); transform: skew(0.4deg); }
+            80% { clip: rect(50px, 9999px, 20px, 0); transform: skew(0.1deg); }
+            100% { clip: rect(30px, 9999px, 70px, 0); transform: skew(0.7deg); }
+        }
+
+        /* --- 4. LOCKSCREEN --- */
         #overlay {
-            position: fixed; inset: 0; background: black; z-index: 9999;
+            position: fixed; inset: 0; background: black; z-index: 100;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: opacity 0.6s ease-out, visibility 0.6s;
-            padding: 20px; text-align: center;
+            transition: opacity 0.5s ease-out; padding: 20px; text-align: center;
         }
-        .lock-icon { 
-            font-size: 4rem; margin-bottom: 20px; 
-            text-shadow: 0 0 20px var(--neon);
-            animation: pulse 2s infinite;
-        }
+        .lock-icon { font-size: 5rem; margin-bottom: 20px; animation: pulse 1.5s infinite; filter: drop-shadow(0 0 10px var(--neon)); }
         
         .btn-enter {
-            border: 2px solid var(--neon); 
-            background: rgba(0, 255, 65, 0.05); 
-            color: var(--neon);
-            padding: 15px 50px; 
-            font-size: 1.2rem; font-weight: bold; letter-spacing: 3px;
-            cursor: pointer; text-transform: uppercase; 
-            box-shadow: 0 0 15px var(--neon-glow);
-            transition: 0.3s; margin-top: 30px; 
-            border-radius: 4px;
+            position: relative; overflow: hidden;
+            border: 2px solid var(--neon); background: rgba(0, 255, 65, 0.05); color: var(--neon);
+            padding: 15px 40px; font-size: 1.2rem; font-weight: bold; letter-spacing: 2px;
+            cursor: pointer; text-transform: uppercase; font-family: var(--font-main);
+            transition: 0.2s; margin-top: 30px;
         }
-        .btn-enter:hover {
-            background: var(--neon); color: black;
-            box-shadow: 0 0 40px var(--neon);
+        .btn-enter:hover { background: var(--neon); color: black; box-shadow: 0 0 30px var(--neon); }
+        .btn-enter::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
         }
+        .btn-enter:hover::before { left: 100%; }
 
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-            100% { transform: scale(1); opacity: 1; }
-        }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.8; } 100% { transform: scale(1); opacity: 1; } }
 
-        /* --- 4. LAYER 2: NEON PAGES (CONTAINER) --- */
+        /* --- 5. LAYOUT --- */
         .container {
-            position: relative; 
-            z-index: 10; /* Di atas scanlines */
+            position: relative; z-index: 10;
             max-width: 900px; margin: 0 auto; padding: 20px;
             display: none; padding-bottom: 100px;
         }
-
-        /* Header dengan Efek Neon Strong */
         header {
-            text-align: center; 
-            border: 1px solid var(--neon);
-            padding: 25px; margin-bottom: 25px; 
-            background: rgba(0, 10, 0, 0.9);
-            border-radius: 8px; 
-            box-shadow: 0 0 15px var(--neon-glow), inset 0 0 10px rgba(0, 255, 65, 0.1);
+            text-align: center; border: 1px solid var(--neon-dim);
+            padding: 25px; margin-bottom: 25px; background: var(--glass);
+            border-radius: 4px; box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
         }
-        
-        h1 { margin: 0; font-size: 1.8rem; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 5px var(--neon); }
-        .subtitle { 
-            font-size: 1rem; font-weight: bold; margin-top: 10px; display: inline-block;
-            border-top: 2px solid var(--neon-glow); padding-top: 5px; color: #fff; 
-        }
+        .subtitle { font-size: 1rem; letter-spacing: 3px; border-top: 1px solid var(--neon-dim); display: block; padding-top: 10px; color: #fff; margin-top: 10px; }
 
-        /* --- 5. NAVIGASI --- */
-        nav { display: flex; justify-content: center; gap: 12px; margin-bottom: 25px; flex-wrap: wrap; }
+        /* --- 6. NAVIGASI --- */
+        nav { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
         .nav-btn {
-            background: #001100; color: var(--neon); 
-            border: 1px solid var(--neon-glow);
-            padding: 12px 20px; cursor: pointer; 
-            font-family: inherit; font-weight: bold; font-size: 0.85rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+            background: #020202; color: var(--neon); border: 1px solid var(--neon-dim);
+            padding: 12px 18px; cursor: pointer; font-family: var(--font-main); font-weight: bold; font-size: 1rem;
+            transition: 0.2s; letter-spacing: 1px;
         }
-        .nav-btn:hover, .nav-btn.active {
-            background: var(--neon); color: black; 
-            border-color: var(--neon);
-            box-shadow: 0 0 20px var(--neon);
-            transform: translateY(-2px);
-        }
+        .nav-btn:hover { background: rgba(0, 255, 65, 0.15); text-shadow: 0 0 8px var(--neon); }
+        .nav-btn.active { background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); border-color: var(--neon); }
 
-        /* --- 6. KONTEN SLIDE (PANEL UTAMA) --- */
+        /* --- 7. TEKS BERJALAN --- */
+        .marquee-container {
+            border-top: 2px solid var(--neon); border-bottom: 2px solid var(--neon);
+            margin-top: 25px; background: rgba(0, 20, 0, 0.9); overflow: hidden;
+            white-space: nowrap; padding: 10px 0;
+        }
+        .marquee-content {
+            display: inline-block; padding-left: 100%;
+            animation: scroll-text 15s linear infinite;
+            font-size: 1.1rem; font-weight: bold; letter-spacing: 3px; color: white;
+            text-shadow: 0 0 5px var(--neon);
+        }
+        @keyframes scroll-text { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+        /* --- 8. SLIDES --- */
         .slide {
-            display: none; 
-            background: var(--panel-bg); 
-            border: 1px solid var(--neon); /* Border Neon */
-            padding: 30px; 
-            border-radius: 8px; 
-            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            line-height: 1.6; font-size: 0.95rem; color: #e0e0e0;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.15); /* Outer Glow */
+            display: none; background: var(--glass); border: 1px solid var(--neon-dim);
+            padding: 30px; animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.05); line-height: 1.6; position: relative;
+        }
+        .slide::before {
+            content: "SYSTEM_READY"; position: absolute; top: 5px; right: 10px;
+            font-size: 0.6rem; color: var(--neon-dim); letter-spacing: 2px;
         }
         .slide.active { display: block; }
-        
-        @keyframes slideUp { 
-            from { opacity: 0; transform: translateY(30px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         
         h2 { 
             border-bottom: 2px solid var(--neon); padding-bottom: 10px; 
-            margin-top: 0; font-size: 1.4rem; color: var(--neon); margin-bottom: 20px;
-            text-shadow: 0 0 10px var(--neon-glow);
+            margin-top: 0; font-size: 1.5rem; color: white; margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--neon-dim);
         }
 
-        /* --- 7. MARQUEE --- */
-        .marquee-box {
-            border: 1px dashed var(--neon-glow); padding: 12px;
-            background: rgba(0, 30, 0, 0.8); font-weight: bold; color: white;
-            margin-top: 25px; font-size: 1.1rem;
-            text-transform: uppercase; letter-spacing: 2px;
-            box-shadow: inset 0 0 10px #000;
-        }
-
-        /* --- 8. GALERI GRID --- */
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; margin-top: 20px; }
+        /* --- 9. GALERI (4 FOTO) --- */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; margin-top: 20px; }
         .gallery-item {
-            border: 1px solid var(--neon-glow); 
-            position: relative; height: 180px; overflow: hidden;
-            border-radius: 6px; transition: all 0.3s ease;
-            background: #000;
+            border: 1px solid var(--neon-dim); position: relative; height: 180px; overflow: hidden;
+            transition: 0.3s; background: #000;
         }
-        .gallery-item:hover { 
-            border-color: var(--neon); 
-            transform: scale(1.03); 
-            box-shadow: 0 0 25px var(--neon-glow); 
-            z-index: 2;
-        }
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; opacity: 0.8; }
-        .gallery-item:hover img { opacity: 1; }
-        
+        .gallery-item:hover { border-color: var(--neon); transform: scale(1.02); z-index: 2; box-shadow: 0 0 20px var(--neon-dim); }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: 0.3s; filter: grayscale(80%); }
+        .gallery-item:hover img { opacity: 1; filter: grayscale(0%); }
         .caption {
-            position: absolute; bottom: 0; left: 0; width: 100%;
-            background: rgba(0,0,0,0.9); color: var(--neon);
-            font-size: 0.7rem; padding: 6px; text-align: center; 
-            border-top: 1px solid var(--neon-glow);
-            font-weight: bold;
+            position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.9);
+            color: var(--neon); font-size: 0.7rem; padding: 8px; text-align: center; border-top: 1px solid var(--neon-dim);
+            font-weight: bold; letter-spacing: 1px;
         }
 
-        /* --- 9. KOMPETENSI --- */
-        .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+        /* --- 10. KOMPETENSI (SCRAMBLE EFFECT) --- */
+        .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .comp-btn {
-            padding: 15px; border: 1px solid var(--neon-glow); 
-            background: rgba(0, 20, 0, 0.5); 
-            color: var(--neon); cursor: pointer; text-align: left; 
-            font-family: inherit; font-weight: bold; font-size: 0.85rem;
-            transition: 0.2s;
+            padding: 15px; border: 1px solid var(--neon-dim); background: rgba(0,0,0,0.6); 
+            color: var(--neon); cursor: pointer; font-family: var(--font-main); font-weight: bold; font-size: 0.9rem;
+            transition: 0.2s; text-align: left;
         }
         .comp-btn:hover { background: rgba(0, 255, 65, 0.1); border-color: var(--neon); }
-        .comp-btn.active-comp { 
-            background: var(--neon); color: black; 
-            box-shadow: 0 0 15px var(--neon); 
+        .comp-btn.active-comp { background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); }
+        .desc-box { 
+            border: 1px dashed var(--neon); padding: 20px; 
+            background: rgba(0,10,0,0.8); margin-top: 20px; color: #eee; font-size: 1rem;
+            min-height: 120px;
         }
-        
-        .desc-box {
-            border: 1px solid var(--neon); padding: 20px; min-height: 80px; 
-            background: rgba(0,0,0,0.6); font-size: 0.95rem; color: white;
-            border-left: 4px solid var(--neon);
+
+        footer { text-align: center; margin-top: 60px; padding: 20px; border-top: 1px solid var(--neon-dim); color: #666; font-size: 0.8rem; }
+        .author-link { 
+            color: var(--neon); text-decoration: none; font-weight: bold; 
+            border: 1px solid var(--neon); padding: 8px 15px; display: inline-block; margin-bottom: 10px;
+            transition: 0.3s; text-transform: uppercase;
         }
-        
-        /* FOOTER */
-        footer { 
-            text-align: center; margin-top: 60px; font-size: 0.85rem; 
-            padding-bottom: 30px; border-top: 1px solid var(--neon-glow); padding-top: 25px; 
-            color: #888;
-        }
-        .author-link {
-            color: var(--neon); text-decoration: none; font-weight: bold;
-            padding: 5px 10px; border: 1px dashed var(--neon-glow);
-            transition: 0.3s; display: inline-block; margin-bottom: 10px;
-        }
-        .author-link:hover { background: var(--neon); color: black; box-shadow: 0 0 10px var(--neon); }
+        .author-link:hover { background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); }
     </style>
 </head>
 <body>
@@ -220,30 +206,31 @@
 
     <div id="overlay">
         <div class="lock-icon">🔒</div>
-        <h2 style="margin: 0; color: white; text-transform: uppercase; letter-spacing: 2px;">Kreasi web sederhana</h2>
-        <p style="margin-top: 10px; color: var(--neon); font-size: 1.1rem;">SMK NURUL FALAH</p>
-        
-        <button class="btn-enter" id="btn-enter">MASUK SYSTEM</button>
+        <h2 style="margin: 0; color: white; letter-spacing: 4px; font-weight: 400;">ENCRYPTED CONNECTION</h2>
+        <p style="margin-top: 5px; color: var(--neon);">SMK NURUL FALAH - SECURE PORTAL</p>
+        <button class="btn-enter" onclick="System.enter()">BUKA AKSES DATA</button>
     </div>
 
     <div class="container" id="main-content">
         <header>
-            <h1>SMK NURUL FALAH</h1>
+            <div class="glitch-wrapper">
+                <h1 class="glitch" data-text="SMK NURUL FALAH">SMK NURUL FALAH</h1>
+            </div>
             <div class="subtitle">XI (BDP) PEMASARAN</div>
         </header>
 
         <nav>
-            <button class="nav-btn active" onclick="showSlide('home', this)">BERANDA</button>
-            <button class="nav-btn" onclick="showSlide('visi', this)">VISI & MISI</button>
-            <button class="nav-btn" onclick="showSlide('prodi', this)">MATERI</button>
-            <button class="nav-btn" onclick="showSlide('gallery', this)">GALERI</button>
+            <button class="nav-btn active" onmouseenter="AudioFX.hover()" onclick="System.nav('home', this)">BERANDA</button>
+            <button class="nav-btn" onmouseenter="AudioFX.hover()" onclick="System.nav('visi', this)">VISI & MISI</button>
+            <button class="nav-btn" onmouseenter="AudioFX.hover()" onclick="System.nav('prodi', this)">MATERI</button>
+            <button class="nav-btn" onmouseenter="AudioFX.hover()" onclick="System.nav('gallery', this)">GALERI</button>
         </nav>
 
         <div id="home" class="slide active">
             <h2>PROFIL SEKOLAH</h2>
             <p>
                 Selamat datang di Sistem Informasi Digital <strong>Kelas XI Bisnis Daring dan Pemasaran (BDP)</strong>. 
-                Website ini didedikasikan sebagai media dokumentasi dan portofolio digital siswa-siswi <strong>SMK Nurul Falah</strong>.
+                Website ini didedikasikan sebagai media dokumentasi, informasi, dan portofolio digital siswa-siswi <strong>SMK Nurul Falah</strong>.
             </p>
             <br>
             <p>
@@ -252,10 +239,10 @@
                 tetapi juga memiliki karakter akhlakul karimah yang kuat serta siap bersaing di dunia industri global.
             </p>
             
-            <div class="marquee-box">
-                <marquee scrollamount="12" direction="left">
-                    SMK NUFA JAYA &nbsp;///&nbsp; SMK NUFA JAYA
-                </marquee>
+            <div class="marquee-container">
+                <div class="marquee-content">
+                    SMK NUFA JAYA &nbsp;///&nbsp; DISIPLIN - KOMPETEN - SIAP KERJA &nbsp;///&nbsp; SYSTEM ONLINE &nbsp;///&nbsp; SMK NUFA JAYA
+                </div>
             </div>
         </div>
 
@@ -264,7 +251,7 @@
             <p style="color:white; font-weight:bold; margin-bottom:5px;">VISI:</p>
             <p>"Terwujudnya Lulusan SMK Nurul Falah yang Beriman, Bertakwa, Kompeten, Mandiri, dan Berwawasan Global di Kabupaten Lampung Timur."</p>
             
-            <hr style="border: 0; border-top: 1px dashed var(--neon-glow); margin: 20px 0;">
+            <hr style="border: 0; border-top: 1px dashed var(--neon); margin: 20px 0;">
             
             <p style="color:white; font-weight:bold; margin-bottom:5px;">MISI PROGRAM KEAHLIAN BDP:</p>
             <ul style="padding-left: 20px;">
@@ -276,134 +263,214 @@
 
         <div id="prodi" class="slide">
             <h2>KOMPETENSI KEAHLIAN</h2>
-            <p style="margin-bottom: 15px; font-size: 0.85rem; color:#888;">Klik modul di bawah untuk detail:</p>
-            
             <div class="comp-grid">
-                <button class="comp-btn" onclick="showDetail(this, 'dm')">DIGITAL MARKETING</button>
-                <button class="comp-btn" onclick="showDetail(this, 'rb')">RETAIL BUSINESS</button>
-                <button class="comp-btn" onclick="showDetail(this, 'ps')">PUBLIC SPEAKING</button>
-                <button class="comp-btn" onclick="showDetail(this, 'kwu')">PRODUK KREATIF</button>
+                <button class="comp-btn" onmouseenter="AudioFX.hover()" onclick="System.detail(this, 'dm')">DIGITAL MARKETING</button>
+                <button class="comp-btn" onmouseenter="AudioFX.hover()" onclick="System.detail(this, 'rb')">RETAIL BUSINESS</button>
+                <button class="comp-btn" onmouseenter="AudioFX.hover()" onclick="System.detail(this, 'ps')">PUBLIC SPEAKING</button>
+                <button class="comp-btn" onmouseenter="AudioFX.hover()" onclick="System.detail(this, 'kwu')">PRODUK KREATIF</button>
             </div>
-
             <div id="desc-output" class="desc-box">
-                // MENUNGGU INPUT SYSTEM...
+                // SYSTEM_IDLE: MENUNGGU PERINTAH...
             </div>
         </div>
 
         <div id="gallery" class="slide">
-            <h2>DOKUMENTASI KEGIATAN</h2>
-            <p style="font-size: 0.8rem; color:#888; margin-bottom: 15px;">Arsip Foto Kegiatan Siswa BDP:</p>
-            
+            <h2>GALERI KEGIATAN</h2>
             <div class="gallery-grid">
-                <div class="gallery-item">
-                    <img src="img/foto1.jpg" alt="Foto 1" onerror="this.src='https://via.placeholder.com/300x200/003300/00FF41?text=IMG+ERROR'">
+                <div class="gallery-item" onclick="AudioFX.click()">
+                    <img src="img/foto1.jpg" alt="1" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=IMG+ERROR'">
                     <div class="caption">KEGIATAN KELAS XI BDP</div>
                 </div>
-                <div class="gallery-item">
-                    <img src="img/foto2.jpg" alt="Foto 2" onerror="this.src='https://via.placeholder.com/300x200/003300/00FF41?text=IMG+ERROR'">
+                <div class="gallery-item" onclick="AudioFX.click()">
+                    <img src="img/foto2.jpg" alt="2" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=IMG+ERROR'">
                     <div class="caption">PENERIMAAN RAPORT</div>
                 </div>
-                <div class="gallery-item">
-                    <img src="img/foto3.jpg" alt="Foto 3" onerror="this.src='https://via.placeholder.com/300x200/003300/00FF41?text=IMG+ERROR'">
-                    <div class="caption">KUNJUNGAN WISATA</div>
+                <div class="gallery-item" onclick="AudioFX.click()">
+                    <img src="img/foto3.jpg" alt="3" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=IMG+ERROR'">
+                    <div class="caption">KUNJUNGAN INDUSTRI</div>
                 </div>
-                <div class="gallery-item">
-                    <img src="img/foto4.jpg" alt="Foto 4" onerror="this.src='https://via.placeholder.com/300x200/003300/00FF41?text=IMG+ERROR'">
+                <div class="gallery-item" onclick="AudioFX.click()">
+                    <img src="img/foto4.jpg" alt="4" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=IMG+ERROR'">
                     <div class="caption">KEGIATAN EKSTRAKURIKULER</div>
                 </div>
             </div>
         </div>
 
         <footer>
-            <a href="https://wa.me/6283199753711" target="_blank" class="author-link">
+            <a href="https://wa.me/6283199753711" target="_blank" class="author-link" onclick="AudioFX.click()">
                 [ CONTACT AUTHOR: ARLING ]
             </a>
-            <div style="margin-top: 10px; font-size: 0.75rem;">
-                &copy; 2026 SMK NURUL FALAH 
-            </div>
+            <div style="margin-top: 15px;">&copy; 2026 SMK NURUL FALAH - SYSTEM V.FINAL</div>
         </footer>
     </div>
 
     <script>
-        /* --- 1. MATRIX ENGINE (KONTRAK & TAJAM) --- */
-        const canvas = document.getElementById("matrix-bg");
-        const ctx = canvas.getContext("2d");
-        let drops = [];
+        /**
+         * CLASS: AUDIO ENGINE
+         * Menghasilkan suara sintesis (tanpa file) untuk efek futuristik
+         */
+        class AudioEngine {
+            constructor() {
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            }
 
-        function initMatrix() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            drops = Array(Math.ceil(canvas.width / 20)).fill(1);
-        }
+            resume() {
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+            }
 
-        function drawMatrix() {
-            // Gunakan alpha kecil untuk jejak (trail) yang panjang
-            ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; 
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            ctx.fillStyle = "#00FF41"; // Warna Hijau Matrix Asli
-            ctx.font = "15px monospace";
-            
-            for (let i = 0; i < drops.length; i++) {
-                const text = String.fromCharCode(0x30A0 + Math.random() * 96);
-                ctx.fillText(text, i * 20, drops[i] * 20);
-                
-                // Random reset agar terlihat acak
-                if (drops[i] * 20 > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
-                drops[i]++;
+            hover() {
+                this.resume();
+                const o = this.ctx.createOscillator();
+                const g = this.ctx.createGain();
+                o.type = 'sine';
+                o.frequency.setValueAtTime(1000, this.ctx.currentTime);
+                o.frequency.exponentialRampToValueAtTime(2000, this.ctx.currentTime + 0.05);
+                g.gain.setValueAtTime(0.05, this.ctx.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
+                o.connect(g); g.connect(this.ctx.destination);
+                o.start(); o.stop(this.ctx.currentTime + 0.05);
+            }
+
+            click() {
+                this.resume();
+                const o = this.ctx.createOscillator();
+                const g = this.ctx.createGain();
+                o.type = 'square';
+                o.frequency.setValueAtTime(200, this.ctx.currentTime);
+                o.frequency.exponentialRampToValueAtTime(50, this.ctx.currentTime + 0.1);
+                g.gain.setValueAtTime(0.1, this.ctx.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
+                o.connect(g); g.connect(this.ctx.destination);
+                o.start(); o.stop(this.ctx.currentTime + 0.1);
             }
         }
 
-        window.addEventListener('resize', initMatrix);
-        initMatrix();
-        setInterval(drawMatrix, 50);
-
-        /* --- 2. SYSTEM LOGIC (SIMPLE & CLEAN) --- */
-        const overlay = document.getElementById('overlay');
-        const mainContent = document.getElementById('main-content');
-        const enterBtn = document.getElementById('btn-enter');
-
-        // Transisi Masuk (Tanpa Audio)
-        enterBtn.addEventListener('click', () => {
-            overlay.style.opacity = '0';
-            overlay.style.visibility = 'hidden';
-            mainContent.style.display = 'block';
-        });
-
-        // Navigasi Tab
-        function showSlide(id, btn) {
-            // Hide all slides
-            document.querySelectorAll('.slide').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-            
-            // Show selected
-            document.getElementById(id).classList.add('active');
-            btn.classList.add('active');
+        /**
+         * CLASS: TEXT SCRAMBLER
+         * Efek dekripsi teks ala hacker (Huruf acak -> Teks Asli)
+         */
+        class TextScramble {
+            constructor(el) {
+                this.el = el;
+                this.chars = '!<>-_\\/[]{}—=+*^?#________'; // Karakter acak hacker
+                this.update = this.update.bind(this);
+            }
+            setText(newText) {
+                const oldText = this.el.innerText;
+                const length = Math.max(oldText.length, newText.length);
+                const promise = new Promise((resolve) => this.resolve = resolve);
+                this.queue = [];
+                for (let i = 0; i < length; i++) {
+                    const from = oldText[i] || '';
+                    const to = newText[i] || '';
+                    const start = Math.floor(Math.random() * 40);
+                    const end = start + Math.floor(Math.random() * 40);
+                    this.queue.push({ from, to, start, end });
+                }
+                cancelAnimationFrame(this.frameRequest);
+                this.frame = 0;
+                this.update();
+                return promise;
+            }
+            update() {
+                let output = '';
+                let complete = 0;
+                for (let i = 0, n = this.queue.length; i < n; i++) {
+                    let { from, to, start, end, char } = this.queue[i];
+                    if (this.frame >= end) {
+                        complete++;
+                        output += to;
+                    } else if (this.frame >= start) {
+                        if (!char || Math.random() < 0.28) {
+                            char = this.chars[Math.floor(Math.random() * this.chars.length)];
+                            this.queue[i].char = char;
+                        }
+                        output += `<span style="color:#008F11">${char}</span>`;
+                    } else {
+                        output += from;
+                    }
+                }
+                this.el.innerHTML = output;
+                if (complete === this.queue.length) {
+                    this.resolve();
+                } else {
+                    this.frameRequest = requestAnimationFrame(this.update);
+                    this.frame++;
+                }
+            }
         }
 
-        // Data Materi
-        const materiData = {
-            'dm': 'Strategi pemasaran komprehensif menggunakan platform digital (Facebook Ads, Instagram, TikTok, Marketplace) untuk menjangkau audiens tertarget, meningkatkan brand awareness, dan mengoptimalkan konversi penjualan secara online.',
-            'rb': 'Pengelolaan manajemen toko ritel modern yang mencakup teknik display produk (Visual Merchandising), manajemen persediaan (Stock Opname), administrasi transaksi (Kasir), serta standar pelayanan prima (Service Excellence).',
-            'ps': 'Pengembangan soft-skill komunikasi bisnis untuk keperluan presentasi produk, negosiasi dengan klien, serta kemampuan Public Speaking yang persuasif dan percaya diri di hadapan audiens profesional.',
-            'kwu': 'Implementasi mata pelajaran Produk Kreatif dan Kewirausahaan (PKK) dimana siswa dibimbing untuk merancang, memproduksi, dan memasarkan produk inovatif serta menyusun rencana bisnis (Business Plan) yang layak jual.'
+        /**
+         * CLASS: MATRIX RAIN
+         * Efek hujan kode di background
+         */
+        class MatrixBg {
+            constructor() {
+                this.canvas = document.getElementById("matrix-bg");
+                this.ctx = this.canvas.getContext("2d");
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+                setInterval(() => this.draw(), 50);
+            }
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                this.drops = Array(Math.ceil(this.canvas.width / 20)).fill(1);
+            }
+            draw() {
+                this.ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; 
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.fillStyle = "#0f0"; 
+                this.ctx.font = "14px monospace";
+                for (let i = 0; i < this.drops.length; i++) {
+                    const text = String.fromCharCode(0x30A0 + Math.random() * 96);
+                    this.ctx.fillText(text, i * 20, this.drops[i] * 20);
+                    if (this.drops[i] * 20 > this.canvas.height && Math.random() > 0.975) this.drops[i] = 0;
+                    this.drops[i]++;
+                }
+            }
+        }
+
+        /**
+         * MAIN SYSTEM LOGIC
+         */
+        const AudioFX = new AudioEngine();
+        const MatrixFX = new MatrixBg();
+        const Scrambler = new TextScramble(document.getElementById('desc-output'));
+
+        const System = {
+            materi: {
+                'dm': 'Strategi pemasaran komprehensif menggunakan platform digital (Facebook Ads, Instagram, TikTok, Marketplace) untuk menjangkau audiens tertarget, meningkatkan brand awareness, dan mengoptimalkan konversi penjualan secara online.',
+                'rb': 'Pengelolaan manajemen toko ritel modern yang mencakup teknik display produk (Visual Merchandising), manajemen persediaan (Stock Opname), administrasi transaksi (Kasir), serta standar pelayanan prima (Service Excellence).',
+                'ps': 'Pengembangan soft-skill komunikasi bisnis untuk keperluan presentasi produk, negosiasi dengan klien, serta kemampuan Public Speaking yang persuasif dan percaya diri di hadapan audiens profesional.',
+                'kwu': 'Implementasi mata pelajaran Produk Kreatif dan Kewirausahaan (PKK) dimana siswa dibimbing untuk merancang, memproduksi, dan memasarkan produk inovatif serta menyusun rencana bisnis (Business Plan) yang layak jual.'
+            },
+
+            enter: function() {
+                AudioFX.click();
+                document.getElementById('overlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('overlay').style.display = 'none';
+                    document.getElementById('main-content').style.display = 'block';
+                }, 500);
+            },
+
+            nav: function(id, btn) {
+                AudioFX.click();
+                document.querySelectorAll('.slide').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+                document.getElementById(id).classList.add('active');
+                btn.classList.add('active');
+            },
+
+            detail: function(btn, key) {
+                AudioFX.click();
+                document.querySelectorAll('.comp-btn').forEach(b => b.classList.remove('active-comp'));
+                btn.classList.add('active-comp');
+                // Jalankan efek dekripsi teks
+                Scrambler.setText(this.materi[key]);
+            }
         };
-
-        function showDetail(btn, key) {
-            // Reset active buttons
-            document.querySelectorAll('.comp-btn').forEach(b => b.classList.remove('active-comp'));
-            btn.classList.add('active-comp');
-            
-            const output = document.getElementById('desc-output');
-            output.innerHTML = `<span style="color:var(--neon); animation: pulse 1s infinite;">>> PROCESSING DATA...</span>`;
-            
-            setTimeout(() => {
-                output.innerHTML = materiData[key];
-                output.style.borderLeft = "4px solid var(--neon)";
-            }, 300);
-        }
     </script>
 </body>
 </html>
