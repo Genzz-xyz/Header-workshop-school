@@ -137,7 +137,7 @@
         }
 
         /* =========================================
-           7. GALERI GRID (ENHANCED NEON)
+           7. GALERI GRID (FIXED PATH: Img)
            ========================================= */
         .gallery-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
@@ -146,11 +146,10 @@
         .gallery-item {
             border: 1px solid var(--neon-dark); 
             position: relative; height: 200px; overflow: hidden;
-            border-radius: 10px; /* Sudut agak bulat */
+            border-radius: 10px;
             transition: all 0.3s ease;
         }
         
-        /* Efek Hover Neon Menyala */
         .gallery-item:hover { 
             border-color: var(--neon); 
             transform: scale(1.03); 
@@ -202,7 +201,7 @@
     <div class="scanlines"></div>
 
     <audio id="bgm" loop>
-        <source src="img/musik.mp3" type="audio/mpeg">
+        <source src="Img/musik.mp3" type="audio/mpeg">
     </audio>
 
     <div id="overlay">
@@ -266,26 +265,26 @@
 
         <div id="gallery" class="slide">
             <h2>// DATABASE FOTO</h2>
-            <p style="font-size: 0.75rem; color:#888;">*Menampilkan data dari folder img/</p>
+            <p style="font-size: 0.75rem; color:#888;">*Menampilkan data dari folder Img/</p>
             
             <div class="gallery-grid">
                 <div class="gallery-item">
-                    <img src="img/foto1.jpg" alt="Foto Kelas" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=404+ERROR'">
+                    <img src="Img/foto1.jpg" alt="Foto Kelas" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=404+ERROR'">
                     <div class="caption">KELAS_XI_BDP.JPG</div>
                 </div>
 
                 <div class="gallery-item">
-                    <img src="img/foto2.jpg" alt="Kegiatan 2" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=404+ERROR'">
+                    <img src="Img/foto2.jpg" alt="Kegiatan 2" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=404+ERROR'">
                     <div class="caption">ACTIVITY_LOG_02.JPG</div>
                 </div>
 
                 <div class="gallery-item">
-                    <img src="img/foto3.jpg" alt="Kegiatan 3" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=404+ERROR'">
+                    <img src="Img/foto3.jpg" alt="Kegiatan 3" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=404+ERROR'">
                     <div class="caption">ACTIVITY_LOG_03.JPG</div>
                 </div>
 
                 <div class="gallery-item">
-                    <img src="img/foto4.jpg" alt="Kegiatan 4" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=404+ERROR'">
+                    <img src="Img/foto4.jpg" alt="Kegiatan 4" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=404+ERROR'">
                     <div class="caption">ACTIVITY_LOG_04.JPG</div>
                 </div>
 
@@ -293,12 +292,14 @@
         </div>
 
         <footer>
-            DEV: Arlingツ &bull; SMK NURUL FALAH
+             <a href="https://wa.me/6281234567890" target="_blank" style="text-decoration: none; color: var(--neon); font-weight: bold;">
+                CONTACTS AUTHOR OF ARLING
+            </a> 
+            &bull; SMK NURUL FALAH
         </footer>
     </div>
 
     <script>
-        /* --- MATRIX ENGINE --- */
         const canvas = document.getElementById("matrix-bg");
         const ctx = canvas.getContext("2d");
         let drops = [];
@@ -327,7 +328,6 @@
         initMatrix();
         setInterval(drawMatrix, 50);
 
-        /* --- LOGIKA AUDIO & NAVIGASI --- */
         const startBtn = document.getElementById('start-btn');
         const overlay = document.getElementById('overlay');
         const mainContent = document.getElementById('main-content');
@@ -351,7 +351,6 @@
             btn.classList.add('active');
         }
 
-        /* --- DATA MATERI --- */
         const materiData = {
             'dm': 'Strategi pemasaran menggunakan media digital (IG, TikTok, FB Ads) untuk menjangkau audiens secara luas dan efektif.',
             'rb': 'Manajemen bisnis ritel mulai dari penataan produk (display), stok opname, hingga pelayanan prima kepada pelanggan.',
