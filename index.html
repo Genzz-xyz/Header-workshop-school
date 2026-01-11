@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SMK NURUL FALAH | SISTEM INFORMASI</title>
     <style>
-        /* 1. CONFIG VISUAL */
+        /* --- 1. CONFIG VISUAL (TEMA MATRIX) --- */
         :root {
             --neon: #00FF41;          
             --neon-dark: #003300;     
@@ -25,34 +25,32 @@
             min-height: 100vh;
         }
 
-        /* 2. BACKGROUND */
-        canvas#matrix-bg { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.5; }
+        /* --- 2. BACKGROUND --- */
+        canvas#matrix-bg { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.4; }
         .scanlines { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
             background-size: 100% 4px; pointer-events: none; z-index: 1; 
         }
 
-        /* 3. LOCKSCREEN (TAMPILAN AWAL) */
+        /* --- 3. LOCKSCREEN (TAMPILAN AWAL) --- */
         #overlay {
             position: fixed; inset: 0; background: black; z-index: 9999;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: opacity 0.5s ease-out; /* Transisi dipercepat */
+            transition: opacity 0.8s ease-out;
             padding: 20px; text-align: center;
         }
+        .logo-lock { font-size: 3rem; margin-bottom: 15px; text-shadow: 0 0 10px var(--neon); }
+        
         .btn-start {
-            border: 2px solid var(--neon); background: transparent; color: var(--neon);
-            padding: 20px 50px; font-size: 1.2rem; font-weight: bold; letter-spacing: 2px;
+            border: 2px solid var(--neon); background: rgba(0, 255, 65, 0.1); color: var(--neon);
+            padding: 18px 45px; font-size: 1.1rem; font-weight: bold; letter-spacing: 2px;
             cursor: pointer; text-transform: uppercase; box-shadow: 0 0 20px var(--neon-dark);
-            transition: 0.1s; margin-top: 30px; margin-bottom: 20px;
+            transition: 0.2s; margin-top: 30px; margin-bottom: 20px; border-radius: 5px;
         }
-        /* Efek tekan agar terasa responsif */
-        .btn-start:active { 
-            background: var(--neon); color: black; box-shadow: 0 0 50px var(--neon); 
-            transform: scale(0.95);
-        }
+        .btn-start:active { background: var(--neon); color: black; box-shadow: 0 0 50px var(--neon); transform: scale(0.95); }
 
-        /* 4. LAYOUT UTAMA */
+        /* --- 4. LAYOUT UTAMA --- */
         .container {
             position: relative; z-index: 10;
             max-width: 900px; margin: 0 auto; padding: 20px;
@@ -62,12 +60,13 @@
             text-align: center; border-bottom: 2px solid var(--neon);
             padding: 20px; margin-bottom: 20px; background: var(--glass);
             border-radius: 5px; position: relative;
+            box-shadow: 0 0 15px var(--neon-dark);
         }
         
-        h1 { margin: 0; font-size: 1.6rem; text-transform: uppercase; margin-bottom: 5px; }
-        .subtitle { font-size: 0.9rem; font-weight: bold; border-top: 1px solid var(--neon-dark); display: inline-block; padding-top: 5px; }
+        h1 { margin: 0; font-size: 1.5rem; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
+        .subtitle { font-size: 0.9rem; font-weight: bold; border-top: 1px solid var(--neon-dark); display: inline-block; padding-top: 5px; color: #fff; }
 
-        /* 5. NAVIGASI */
+        /* --- 5. NAVIGASI --- */
         nav { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
         .nav-btn {
             background: rgba(0, 20, 0, 0.6); color: var(--neon); border: 1px solid var(--neon-dark);
@@ -78,54 +77,66 @@
             background: var(--neon); color: black; box-shadow: 0 0 10px var(--neon);
         }
 
-        /* 6. KONTEN SLIDE */
+        /* --- 6. KONTEN SLIDE --- */
         .slide {
             display: none; background: rgba(0, 10, 0, 0.85); border: 1px solid var(--neon-dark);
-            padding: 20px; border-radius: 5px; animation: fadeIn 0.5s ease-out;
-            line-height: 1.6; font-size: 0.95rem;
+            padding: 25px; border-radius: 5px; animation: fadeIn 0.5s ease-out;
+            line-height: 1.6; font-size: 0.9rem; color: #e0e0e0;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
         .slide.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
         h2 { 
             border-bottom: 1px solid var(--neon); padding-bottom: 10px; 
-            margin-top: 0; font-size: 1.3rem; color: white; margin-bottom: 15px;
+            margin-top: 0; font-size: 1.3rem; color: var(--neon); margin-bottom: 15px;
+            text-shadow: 0 0 5px var(--neon-dark);
         }
 
-        /* 7. MARQUEE (TEKS BERJALAN) */
+        /* --- 7. MARQUEE (TEKS BERJALAN) --- */
         .marquee-box {
             border: 1px solid var(--neon-dark); padding: 10px;
-            background: rgba(0, 30, 0, 0.5); font-weight: bold; color: white;
-            margin-top: 20px; font-size: 1.2rem;
-            text-transform: uppercase; letter-spacing: 3px;
+            background: rgba(0, 50, 0, 0.6); font-weight: bold; color: white;
+            margin-top: 25px; font-size: 1rem;
+            text-transform: uppercase; letter-spacing: 2px;
         }
 
-        /* 8. GALERI */
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-top: 20px; }
+        /* --- 8. GALERI --- */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; margin-top: 20px; }
         .gallery-item {
-            border: 1px solid var(--neon-dark); position: relative; height: 160px; overflow: hidden;
+            border: 1px solid var(--neon-dark); position: relative; height: 180px; overflow: hidden;
             border-radius: 5px; transition: all 0.3s ease;
         }
-        .gallery-item:hover { border-color: var(--neon); transform: scale(1.02); box-shadow: 0 0 10px var(--neon); z-index: 2; }
+        .gallery-item:hover { border-color: var(--neon); transform: scale(1.02); box-shadow: 0 0 15px var(--neon); z-index: 2; }
         .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
         .caption {
             position: absolute; bottom: 0; left: 0; width: 100%;
-            background: rgba(0,0,0,0.9); color: white;
-            font-size: 0.6rem; padding: 5px; text-align: center; border-top: 1px solid var(--neon-dark);
+            background: rgba(0,0,0,0.9); color: var(--neon);
+            font-size: 0.65rem; padding: 5px; text-align: center; border-top: 1px solid var(--neon-dark);
         }
 
-        /* 9. KOMPETENSI */
-        .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        /* --- 9. KOMPETENSI --- */
+        .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .comp-btn {
-            padding: 12px; border: 1px solid var(--neon-dark); background: rgba(0,20,0,0.3); 
+            padding: 15px; border: 1px solid var(--neon-dark); background: rgba(0,20,0,0.3); 
             color: var(--neon); cursor: pointer; text-align: left; font-family: inherit; font-weight: bold; font-size: 0.8rem;
         }
-        .comp-btn.active-comp { background: var(--neon); color: black; }
+        .comp-btn.active-comp { background: var(--neon); color: black; box-shadow: 0 0 10px var(--neon); }
         .desc-box {
-            border: 1px solid var(--neon); padding: 15px; min-height: 80px; background: rgba(0,0,0,0.3); font-size: 0.9rem; color: white;
+            border: 1px dashed var(--neon); padding: 15px; min-height: 80px; background: rgba(0,0,0,0.3); font-size: 0.9rem; color: white;
         }
         
-        footer { text-align: center; margin-top: 40px; font-size: 0.8rem; opacity: 0.8; padding-bottom: 20px; border-top: 1px solid var(--neon-dark); padding-top: 20px; }
+        /* FOOTER AUTHOR LINK */
+        footer { 
+            text-align: center; margin-top: 50px; font-size: 0.8rem; opacity: 0.9; 
+            padding-bottom: 30px; border-top: 1px solid var(--neon-dark); padding-top: 20px; 
+            color: #888;
+        }
+        .author-link {
+            color: var(--neon); text-decoration: none; font-weight: bold;
+            border-bottom: 1px dashed var(--neon); transition: 0.3s;
+        }
+        .author-link:hover { background: var(--neon); color: black; }
     </style>
 </head>
 <body>
@@ -138,19 +149,19 @@
     </audio>
 
     <div id="overlay">
-        <div style="font-size: 3rem; margin-bottom: 10px;">🔒</div>
-        <p style="margin-bottom: 10px; font-weight: bold;">PORTAL INFORMASI DIGITAL</p>
-        <p style="font-size: 0.9rem;">SMK NURUL FALAH</p>
+        <div class="logo-lock">🔒</div>
+        <h2 style="margin: 0; color: white;">PORTAL INFORMASI DIGITAL</h2>
+        <p style="margin-top: 5px; color: var(--neon); font-size: 0.9rem;">SMK NURUL FALAH</p>
         
-        <button class="btn-start" id="start-btn">ACCESS DATA</button>
+        <button class="btn-start" id="start-btn">BUKA AKSES DATA</button>
         
-        <p style="font-size: 0.7rem; color: #888;">Klik tombol di atas untuk masuk</p>
+        <p style="font-size: 0.7rem; color: #666;">Klik tombol di atas untuk masuk & memutar audio</p>
     </div>
 
     <div class="container" id="main-content">
         <header>
             <h1>SMK NURUL FALAH</h1>
-            <span class="subtitle">KOMPETENSI KEAHLIAN PEMASARAN (BDP)</span>
+            <span class="subtitle">XI (BDP) PEMASARAN</span>
         </header>
 
         <nav>
@@ -161,14 +172,20 @@
         </nav>
 
         <div id="home" class="slide active">
-            <h2>SELAMAT DATANG</h2>
+            <h2>PROFIL SEKOLAH</h2>
             <p>
-                Selamat datang di Website Kelas XI Bisnis Daring dan Pemasaran (BDP). 
-                Website ini difungsikan sebagai media informasi, arsip dokumentasi, dan pembelajaran digital siswa SMK Nurul Falah.
+                Selamat datang di Sistem Informasi Digital <strong>Kelas XI Bisnis Daring dan Pemasaran (BDP)</strong>. 
+                Website ini didedikasikan sebagai media dokumentasi dan portofolio digital siswa-siswi <strong>SMK Nurul Falah</strong>.
+            </p>
+            <br>
+            <p>
+                SMK Nurul Falah berlokasi di <strong>Desa Gedung Wani Timur, Kecamatan Margatiga, Kabupaten Lampung Timur</strong>. 
+                Di bawah naungan Yayasan Pendidikan Islam Nurul Falah, kami berkomitmen mencetak generasi muda yang tidak hanya unggul dalam kompetensi kejuruan, 
+                tetapi juga memiliki karakter akhlakul karimah yang kuat serta siap bersaing di dunia industri global.
             </p>
             
             <div class="marquee-box">
-                <marquee scrollamount="12" direction="left">
+                <marquee scrollamount="10" direction="left">
                     SMK NUFA JAYA &nbsp;&nbsp; /// &nbsp;&nbsp; SMK NUFA JAYA &nbsp;&nbsp; /// &nbsp;&nbsp; SMK NUFA JAYA
                 </marquee>
             </div>
@@ -177,19 +194,19 @@
         <div id="visi" class="slide">
             <h2>VISI DAN MISI</h2>
             <p><strong>VISI:</strong><br>
-            Mewujudkan lulusan SMK Nurul Falah yang Berakhlak Mulia, Kompeten, Unggul dalam IPTEK, dan Siap Kerja.</p>
+            "Terwujudnya Lulusan SMK Nurul Falah yang Beriman, Bertakwa, Kompeten, Mandiri, dan Berwawasan Global di Kabupaten Lampung Timur."</p>
             <hr style="border: 0; border-top: 1px solid var(--neon-dark); margin: 15px 0;">
-            <p><strong>MISI KEAHLIAN PEMASARAN:</strong></p>
+            <p><strong>MISI PROGRAM KEAHLIAN BDP:</strong></p>
             <ul>
-                <li>Membekali peserta didik dengan keterampilan Bisnis Daring dan Pemasaran (Digital Marketing).</li>
-                <li>Menanamkan jiwa wirausaha (Entrepreneurship) yang kreatif dan inovatif.</li>
-                <li>Meningkatkan kemampuan komunikasi bisnis dan pelayanan prima.</li>
+                <li>Menyelenggarakan pendidikan vokasi yang terintegrasi dengan nilai-nilai keislaman dan teknologi terkini.</li>
+                <li>Membekali peserta didik dengan keterampilan <em>Digital Marketing</em> dan <em>E-Commerce</em> yang relevan dengan kebutuhan industri.</li>
+                <li>Membangun jiwa kewirausahaan (Entrepreneurship) agar siswa mampu menciptakan lapangan kerja mandiri.</li>
             </ul>
         </div>
 
         <div id="prodi" class="slide">
-            <h2>MODUL PEMBELAJARAN</h2>
-            <p style="margin-bottom: 15px; font-size: 0.8rem;">Klik tombol di bawah untuk melihat ringkasan materi:</p>
+            <h2>KOMPETENSI KEAHLIAN</h2>
+            <p style="margin-bottom: 15px; font-size: 0.8rem;">Modul pembelajaran Kelas XI BDP:</p>
             <div class="comp-grid">
                 <button class="comp-btn" onclick="showDetail(this, 'dm')">DIGITAL MARKETING</button>
                 <button class="comp-btn" onclick="showDetail(this, 'rb')">RETAIL BUSINESS</button>
@@ -197,7 +214,7 @@
                 <button class="comp-btn" onclick="showDetail(this, 'kwu')">PRODUK KREATIF</button>
             </div>
             <div id="desc-output" class="desc-box">
-                [ Menunggu Input... ]
+                [ Pilih materi di atas untuk melihat detail ]
             </div>
         </div>
 
@@ -225,12 +242,14 @@
         </div>
 
         <footer>
-            <p>Ingin bertanya lebih lanjut?</p>
-             <a href="https://wa.me/6283199753711" target="_blank" style="text-decoration: none; color: var(--neon); font-weight: bold; border: 1px solid var(--neon); padding: 10px; display: inline-block; margin-top: 5px;">
-                HUBUNGI PENULIS (WHATSAPP)
-            </a> 
-            <br><br>
-            <div style="font-size: 0.7rem;">SMK NURUL FALAH &copy; 2026</div>
+            <div style="margin-bottom: 10px;">
+                <a href="https://wa.me/6283199753711" target="_blank" class="author-link">
+                    AUTHOR: ARLING
+                </a>
+            </div>
+            <div>
+                &copy; 2026 SMK NURUL FALAH
+            </div>
         </footer>
     </div>
 
@@ -259,34 +278,34 @@
         initMatrix();
         setInterval(drawMatrix, 50);
 
-        /* --- AUDIO SYSTEM & UNLOCK (NON-BLOCKING) --- */
+        /* --- SISTEM AUDIO UNLOCK (FIX REDMI/ANDROID) --- */
         const startBtn = document.getElementById('start-btn');
         const overlay = document.getElementById('overlay');
         const mainContent = document.getElementById('main-content');
         const bgm = document.getElementById('bgm');
 
-        // FUNGSI BUKA KUNCI (ANTI MACET)
         const unlockSystem = () => {
-            // 1. LANGSUNG BUKA LAYAR (Jangan Tunggu Musik)
+            // 1. Teknik Pancingan Audio (Wajib untuk HP Android)
+            bgm.volume = 1.0;
+            bgm.play().then(() => {
+                console.log("Audio unlocked successfully");
+            }).catch((e) => {
+                console.log("Audio context warning (normal)");
+            });
+
+            // 2. Buka Tampilan
             overlay.style.opacity = '0';
             setTimeout(() => {
                 overlay.style.display = 'none';
                 mainContent.style.display = 'block';
-            }, 500);
-
-            // 2. COBA PUTAR MUSIK DI BACKGROUND
-            bgm.volume = 1.0;
-            bgm.play().then(() => {
-                console.log("Musik diputar");
-            }).catch(e => {
-                console.log("Musik gagal autoplay (biasa di browser HP), tapi website tetap jalan.");
-            });
+            }, 600);
         };
 
-        // Event Listener (Klik & Sentuh)
+        // Event Listener Responsif
         startBtn.addEventListener('click', unlockSystem);
-        startBtn.addEventListener('touchstart', unlockSystem);
+        startBtn.addEventListener('touchstart', unlockSystem, {passive: true});
 
+        // NAVIGASI
         function showSlide(id, btn) {
             document.querySelectorAll('.slide').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
@@ -294,19 +313,19 @@
             btn.classList.add('active');
         }
 
-        // DATA MATERI
+        // DATA MATERI (LENGKAP)
         const materiData = {
-            'dm': 'Pemanfaatan media digital (Social Media, Marketplace, SEO) untuk memperluas jangkauan pasar dan meningkatkan branding produk secara online.',
-            'rb': 'Pengelolaan operasional toko ritel modern, mulai dari manajemen stok (inventory), penataan produk (display), hingga strategi pelayanan pelanggan.',
-            'ps': 'Teknik komunikasi efektif di depan umum untuk keperluan presentasi bisnis, negosiasi, dan membangun kepercayaan klien.',
-            'kwu': 'Mata pelajaran Produk Kreatif dan Kewirausahaan (PKK) yang fokus pada pembuatan produk inovatif dan perencanaan bisnis rintisan (Start-up).'
+            'dm': 'Strategi pemasaran komprehensif menggunakan platform digital (Facebook Ads, Instagram, TikTok, Marketplace) untuk menjangkau audiens tertarget, meningkatkan brand awareness, dan mengoptimalkan konversi penjualan secara online.',
+            'rb': 'Pengelolaan manajemen toko ritel modern yang mencakup teknik display produk (Visual Merchandising), manajemen persediaan (Stock Opname), administrasi transaksi (Kasir), serta standar pelayanan prima (Service Excellence).',
+            'ps': 'Pengembangan soft-skill komunikasi bisnis untuk keperluan presentasi produk, negosiasi dengan klien, serta kemampuan Public Speaking yang persuasif dan percaya diri di hadapan audiens profesional.',
+            'kwu': 'Implementasi mata pelajaran Produk Kreatif dan Kewirausahaan (PKK) dimana siswa dibimbing untuk merancang, memproduksi, dan memasarkan produk inovatif serta menyusun rencana bisnis (Business Plan) yang layak jual.'
         };
 
         function showDetail(btn, key) {
             document.querySelectorAll('.comp-btn').forEach(b => b.classList.remove('active-comp'));
             btn.classList.add('active-comp');
             const output = document.getElementById('desc-output');
-            output.innerHTML = `Memuat Data...`;
+            output.innerHTML = `<span style='color:var(--neon)'>Sedang memuat data...</span>`;
             setTimeout(() => {
                 output.innerHTML = materiData[key];
             }, 300);
