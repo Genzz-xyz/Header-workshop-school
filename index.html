@@ -42,7 +42,7 @@
         }
         .btn-start {
             border: 2px solid var(--neon); background: transparent; color: var(--neon);
-            padding: 20px 40px; font-size: 1.1rem; font-weight: bold; letter-spacing: 2px;
+            padding: 20px 50px; font-size: 1.2rem; font-weight: bold; letter-spacing: 2px;
             cursor: pointer; text-transform: uppercase; box-shadow: 0 0 20px var(--neon-dark);
             transition: 0.2s; margin-top: 30px; margin-bottom: 20px;
         }
@@ -60,14 +60,6 @@
             border-radius: 5px; position: relative;
         }
         
-        /* TOMBOL MUSIK MANUAL (SOLUSI CADANGAN) */
-        .music-toggle {
-            position: absolute; top: 10px; right: 10px;
-            font-size: 0.7rem; border: 1px solid var(--neon); padding: 5px 10px;
-            cursor: pointer; background: black; z-index: 20; color: white;
-        }
-        .music-toggle:active { background: var(--neon); color: black; }
-
         h1 { margin: 0; font-size: 1.6rem; text-transform: uppercase; margin-bottom: 5px; }
         .subtitle { font-size: 0.9rem; font-weight: bold; border-top: 1px solid var(--neon-dark); display: inline-block; padding-top: 5px; }
 
@@ -100,7 +92,8 @@
         .marquee-box {
             border: 1px solid var(--neon-dark); padding: 8px;
             background: rgba(0, 30, 0, 0.5); font-weight: bold; color: white;
-            margin-top: 20px; font-size: 0.8rem;
+            margin-top: 20px; font-size: 1.2rem; /* Font lebih besar agar terbaca */
+            letter-spacing: 2px;
         }
 
         /* 8. GALERI */
@@ -136,8 +129,8 @@
     <canvas id="matrix-bg"></canvas>
     <div class="scanlines"></div>
 
-    <audio id="bgm" loop preload="auto">
-        <source src="img/musik.mp3" type="audio/mpeg">
+    <audio id="bgm" loop>
+        <source src="https://cdn.pixabay.com/audio/2022/03/09/audio_c8c91a3327.mp3" type="audio/mpeg">
     </audio>
 
     <div id="overlay">
@@ -145,14 +138,13 @@
         <p style="margin-bottom: 10px; font-weight: bold;">PORTAL INFORMASI DIGITAL</p>
         <p style="font-size: 0.9rem;">SMK NURUL FALAH</p>
         
-        <button class="btn-start" id="start-btn">MASUK WEBSITE</button>
+        <button class="btn-start" id="start-btn">ACCESS DATA</button>
         
-        <p id="music-status" style="font-size: 0.7rem; color: #888;">Klik tombol di atas untuk memulai sistem</p>
+        <p style="font-size: 0.7rem; color: #888;">Klik untuk membuka sistem</p>
     </div>
 
     <div class="container" id="main-content">
         <header>
-            <div class="music-toggle" onclick="forcePlayMusic()">🔊 PUTAR / STOP MUSIK</div>
             <h1>SMK NURUL FALAH</h1>
             <span class="subtitle">KOMPETENSI KEAHLIAN PEMASARAN (BDP)</span>
         </header>
@@ -167,16 +159,13 @@
         <div id="home" class="slide active">
             <h2>SELAMAT DATANG</h2>
             <p>
-                Selamat datang di Official Website Kelas XI Bisnis Daring dan Pemasaran (BDP) SMK Nurul Falah. 
-                Website ini dikembangkan sebagai sarana informasi dan dokumentasi kegiatan pembelajaran berbasis digital.
-            </p>
-            <p style="margin-top: 10px;">
-                Kami berkomitmen mencetak tenaga kerja profesional yang siap menghadapi tantangan industri 4.0 dengan bekal kompetensi pemasaran modern.
+                Selamat datang di Website Kelas XI Bisnis Daring dan Pemasaran (BDP). 
+                Website ini difungsikan sebagai media informasi, arsip dokumentasi, dan pembelajaran digital siswa SMK Nurul Falah.
             </p>
             
             <div class="marquee-box">
-                <marquee scrollamount="5" direction="left">
-                    PENGUMUMAN: Ujian Kompetensi Keahlian (UKK) akan segera dilaksanakan. Persiapkan portofolio produk kreatif Anda sebaik mungkin!
+                <marquee scrollamount="10" direction="left">
+                    SMK NUFA JAYA &nbsp;&nbsp; /// &nbsp;&nbsp; SMK NUFA JAYA &nbsp;&nbsp; /// &nbsp;&nbsp; SMK NUFA JAYA
                 </marquee>
             </div>
         </div>
@@ -266,49 +255,28 @@
         initMatrix();
         setInterval(drawMatrix, 50);
 
-        /* --- AUDIO SYSTEM (OPTIMAL) --- */
+        /* --- AUDIO SYSTEM AUTOMATIC (ONLINE SOURCE) --- */
         const startBtn = document.getElementById('start-btn');
         const overlay = document.getElementById('overlay');
         const mainContent = document.getElementById('main-content');
         const bgm = document.getElementById('bgm');
-        const musicStatus = document.getElementById('music-status');
 
-        // 1. CEK KETERSEDIAAN FILE (PENTING!)
-        bgm.addEventListener('error', function(e) {
-            musicStatus.innerHTML = "<span style='color:red; font-weight:bold;'>ERROR: File Musik Tidak Ditemukan (img/musik.mp3)</span>";
-            alert("File musik tidak ditemukan di GitHub. Pastikan folder bernama 'img' (kecil) dan file 'musik.mp3'.");
-        });
-
-        // 2. TOMBOL MANUAL (JIKA PERLU)
-        function forcePlayMusic() {
-            if (bgm.paused) {
-                bgm.volume = 1.0;
-                bgm.play().then(() => {
-                    alert("Musik Berhasil Diputar");
-                }).catch(e => {
-                    alert("Gagal. Coba refresh halaman.");
-                });
-            } else {
-                bgm.pause();
-                alert("Musik Dijeda");
-            }
-        }
-
-        // 3. LOGIKA UTAMA: TOMBOL MASUK WEBSITE
-        // Menggunakan 'click' dan 'touchstart' agar lebih responsif di HP
+        // LOGIKA AUTO PLAY SAAT KLIK 'ACCESS DATA'
         const unlockAudio = () => {
-            bgm.volume = 1.0;
-            bgm.load(); // Paksa muat ulang file
+            bgm.volume = 1.0; // Volume Full
             
+            // Perintah play
             var playPromise = bgm.play();
 
             if (playPromise !== undefined) {
                 playPromise.then(_ => {
-                    console.log("Audio started successfully");
+                    console.log("Musik Online Berhasil Diputar!");
                 })
                 .catch(error => {
-                    console.log("Audio blocked by browser.");
-                    musicStatus.innerHTML = "<span style='color:orange'>Browser memblokir autoplay. Klik tombol speaker di pojok kanan atas setelah masuk.</span>";
+                    // Jika masih gagal (sangat jarang terjadi jika diklik), coba load ulang
+                    console.log("Error play, mencoba reload...");
+                    bgm.load();
+                    bgm.play();
                 });
             }
 
@@ -318,12 +286,9 @@
                 overlay.style.display = 'none';
                 mainContent.style.display = 'block';
             }, 800);
-            
-            // Hapus listener agar tidak dijalankan berkali-kali
-            startBtn.removeEventListener('click', unlockAudio);
-            startBtn.removeEventListener('touchstart', unlockAudio);
         };
 
+        // Event Listener ganda untuk memastikan respon cepat di HP
         startBtn.addEventListener('click', unlockAudio);
         startBtn.addEventListener('touchstart', unlockAudio);
 
