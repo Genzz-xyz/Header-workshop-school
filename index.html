@@ -5,21 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SMK NURUL FALAH | SYSTEM V.FINAL</title>
     <style>
-        /* =========================================
-           1. CONFIG VISUAL (TEMA MATRIX)
-           ========================================= */
+        /* 1. CONFIG VISUAL */
         :root {
-            --neon: #00FF41;          /* Hijau Matrix Terang */
-            --neon-dark: #003300;     /* Hijau Gelap */
-            --bg-color: #000000;      /* Hitam Pekat */
-            --glass: rgba(0, 10, 0, 0.9); /* Transparan Gelap */
+            --neon: #00FF41;          
+            --neon-dark: #003300;     
+            --bg-color: #000000;      
+            --glass: rgba(0, 10, 0, 0.9); 
             --font-main: 'Courier New', monospace;
         }
 
-        * { 
-            box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent; 
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             margin: 0; padding: 0;
@@ -30,169 +25,120 @@
             min-height: 100vh;
         }
 
-        /* =========================================
-           2. BACKGROUND & EFEK VISUAL
-           ========================================= */
-        canvas#matrix-bg { 
-            position: fixed; top: 0; left: 0; z-index: -1; 
-            opacity: 0.8; 
-        }
-        
+        /* 2. BACKGROUND */
+        canvas#matrix-bg { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.8; }
         .scanlines { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
                         linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); 
-            background-size: 100% 4px, 3px 100%; 
-            pointer-events: none; z-index: 1; 
+            background-size: 100% 4px, 3px 100%; pointer-events: none; z-index: 1; 
         }
 
-        /* =========================================
-           3. LOCKSCREEN (Tombol Start)
-           ========================================= */
+        /* 3. LOCKSCREEN */
         #overlay {
             position: fixed; inset: 0; background: black; z-index: 9999;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             transition: opacity 0.8s ease-out;
         }
-
         .btn-start {
             border: 2px solid var(--neon); background: transparent; color: var(--neon);
             padding: 20px 40px; font-size: 1.2rem; font-weight: bold; letter-spacing: 3px;
             cursor: pointer; text-transform: uppercase; box-shadow: 0 0 15px var(--neon-dark);
             transition: 0.2s;
         }
-        .btn-start:active { 
-            background: var(--neon); color: black; box-shadow: 0 0 40px var(--neon); 
-        }
+        .btn-start:active { background: var(--neon); color: black; box-shadow: 0 0 40px var(--neon); }
 
-        /* =========================================
-           4. LAYOUT UTAMA
-           ========================================= */
+        /* 4. LAYOUT */
         .container {
             position: relative; z-index: 10;
             max-width: 900px; margin: 0 auto; padding: 20px;
-            display: none; 
-            padding-bottom: 100px;
+            display: none; padding-bottom: 100px;
         }
-
         header {
             text-align: center; border: 1px solid var(--neon);
             padding: 20px; margin-bottom: 20px; background: var(--glass);
             box-shadow: 0 0 15px var(--neon-dark); border-radius: 5px;
         }
-
         h1 { 
             margin: 0; font-size: 1.8rem; text-transform: uppercase; 
             text-shadow: 2px 0 var(--neon-dark);
             animation: glitch 3s infinite alternate-reverse; 
         }
-
         @keyframes glitch { 
             0%{transform:translate(0)} 20%{transform:translate(-2px,1px)} 
             40%{transform:translate(-1px,-1px)} 60%{transform:translate(1px,2px)} 
             80%{transform:translate(1px,-1px)} 100%{transform:translate(0)} 
         }
+        .subtitle { margin-top: 10px; font-size: 0.9rem; border-top: 1px solid var(--neon-dark); padding-top: 5px; display: inline-block; }
 
-        .subtitle { 
-            margin-top: 10px; font-size: 0.9rem; 
-            border-top: 1px solid var(--neon-dark); padding-top: 5px; 
-            display: inline-block; 
-        }
-
-        /* =========================================
-           5. NAVIGASI
-           ========================================= */
-        nav { 
-            display: flex; justify-content: center; gap: 10px; 
-            margin-bottom: 20px; flex-wrap: wrap; 
-        }
-        
+        /* 5. NAVIGASI */
+        nav { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
         .nav-btn {
             background: rgba(0, 20, 0, 0.6); color: var(--neon); border: 1px solid var(--neon-dark);
             padding: 12px 20px; cursor: pointer; font-family: inherit; font-weight: bold; font-size: 0.85rem;
             transition: 0.3s;
         }
         .nav-btn:hover, .nav-btn.active {
-            background: var(--neon); color: black; 
-            box-shadow: 0 0 15px var(--neon); border-color: var(--neon);
+            background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); border-color: var(--neon);
         }
 
-        /* =========================================
-           6. KONTEN (SLIDE)
-           ========================================= */
+        /* 6. SLIDE CONTENT */
         .slide {
             display: none; background: var(--glass); border: 1px solid var(--neon-dark);
             padding: 25px; border-radius: 5px; animation: fadeIn 0.5s ease-out;
         }
         .slide.active { display: block; }
-        
-        @keyframes fadeIn { 
-            from { opacity: 0; transform: translateY(10px); } 
-            to { opacity: 1; transform: translateY(0); } 
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        h2 { border-left: 4px solid var(--neon); padding-left: 15px; margin-top: 0; font-size: 1.4rem; color: white; }
+
+        /* === FITUR BARU: TEKS BERJALAN CSS (ANTI MACET) === */
+        .marquee-container {
+            border: 1px solid var(--neon-dark);
+            padding: 10px;
+            overflow: hidden;
+            white-space: nowrap;
+            background: rgba(0, 20, 0, 0.5);
+        }
+        .marquee-text {
+            display: inline-block;
+            padding-left: 100%; /* Mulai dari luar layar kanan */
+            animation: scroll-left 15s linear infinite; /* Kecepatan 15 detik */
+            font-weight: bold;
+        }
+        @keyframes scroll-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
         }
 
-        h2 { 
-            border-left: 4px solid var(--neon); padding-left: 15px; 
-            margin-top: 0; font-size: 1.4rem; color: white; 
-        }
-
-        /* =========================================
-           7. GALERI GRID (FIXED PATH: Img)
-           ========================================= */
-        .gallery-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
-            gap: 15px; margin-top: 20px;
-        }
+        /* 7. GALERI (FIX FOLDER Img/) */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-top: 20px; }
         .gallery-item {
-            border: 1px solid var(--neon-dark); 
-            position: relative; height: 200px; overflow: hidden;
-            border-radius: 10px;
-            transition: all 0.3s ease;
+            border: 1px solid var(--neon-dark); position: relative; height: 200px; overflow: hidden;
+            border-radius: 10px; transition: all 0.3s ease;
         }
-        
         .gallery-item:hover { 
-            border-color: var(--neon); 
-            transform: scale(1.03); 
-            box-shadow: 0 0 15px var(--neon), 0 0 30px var(--neon-dark);
-            z-index: 2;
+            border-color: var(--neon); transform: scale(1.03); 
+            box-shadow: 0 0 15px var(--neon), 0 0 30px var(--neon-dark); z-index: 2;
         }
-
-        .gallery-item img { 
-            width: 100%; height: 100%; object-fit: cover; opacity: 0.8; 
-            transition: 0.3s;
-        }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.3s; }
         .gallery-item:hover img { opacity: 1; }
-        
         .caption {
             position: absolute; bottom: 0; left: 0; width: 100%;
             background: rgba(0,0,0,0.8); color: var(--neon);
-            font-size: 0.7rem; padding: 5px; text-align: center;
-            border-top: 1px solid var(--neon-dark);
+            font-size: 0.7rem; padding: 5px; text-align: center; border-top: 1px solid var(--neon-dark);
         }
 
-        /* =========================================
-           8. KOMPETENSI GRID
-           ========================================= */
-        .comp-grid { 
-            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; 
-        }
+        /* 8. KOMPETENSI */
+        .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .comp-btn {
             padding: 15px; border: 1px solid var(--neon-dark); background: rgba(0,20,0,0.3); 
             color: var(--neon); cursor: pointer; text-align: left; font-family: inherit;
         }
-        .comp-btn.active-comp { 
-            background: var(--neon); color: black; box-shadow: 0 0 10px var(--neon); 
-        }
-
+        .comp-btn.active-comp { background: var(--neon); color: black; box-shadow: 0 0 10px var(--neon); }
         .desc-box {
-            border: 1px dashed var(--neon); padding: 15px; min-height: 80px; 
-            background: rgba(0,0,0,0.5); font-size: 0.9rem;
+            border: 1px dashed var(--neon); padding: 15px; min-height: 80px; background: rgba(0,0,0,0.5); font-size: 0.9rem;
         }
-
-        footer { 
-            text-align: center; margin-top: 30px; 
-            font-size: 0.7rem; opacity: 0.6; padding-bottom: 20px; 
-        }
+        footer { text-align: center; margin-top: 30px; font-size: 0.7rem; opacity: 0.6; padding-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -200,7 +146,7 @@
     <canvas id="matrix-bg"></canvas>
     <div class="scanlines"></div>
 
-    <audio id="bgm" loop>
+    <audio id="bgm" loop preload="auto">
         <source src="Img/musik.mp3" type="audio/mpeg">
     </audio>
 
@@ -208,7 +154,7 @@
         <div style="font-size: 3rem; margin-bottom: 20px;">🔒</div>
         <p style="margin-bottom: 30px; letter-spacing: 2px;">SECURE CONNECTION ESTABLISHED</p>
         <button class="btn-start" id="start-btn">[ AKSES DATA ]</button>
-        <p style="margin-top: 20px; font-size: 0.7rem; color: #555;">*Klik untuk mengaktifkan Suara & Visual</p>
+        <p id="music-status" style="margin-top: 20px; font-size: 0.7rem; color: #555;">*Klik untuk mengaktifkan Suara & Visual</p>
     </div>
 
     <div class="container" id="main-content">
@@ -228,10 +174,10 @@
             <h2>// SELAMAT DATANG</h2>
             <p>Selamat datang di portal informasi digital XI BDP. Website ini dirancang sebagai media pembelajaran interaktif.</p>
             <br>
-            <div style="border: 1px solid var(--neon-dark); padding: 10px;">
-                <marquee scrollamount="4">
-                    [INFO] SELAMAT MENGERJAKAN PROJECT. JANGAN LUPA UPDATE PROGRESS DI GITHUB!
-                </marquee>
+            <div class="marquee-container">
+                <div class="marquee-text">
+                    [INFO] SELAMAT MENGERJAKAN PROJECT. JANGAN LUPA UPDATE PROGRESS DI GITHUB! --- PERHATIKAN TANGGAL PENGUMPULAN TUGAS!
+                </div>
             </div>
         </div>
 
@@ -250,14 +196,12 @@
         <div id="prodi" class="slide">
             <h2>// KOMPETENSI KEAHLIAN</h2>
             <p style="font-size: 0.8rem; margin-bottom: 10px;">> Pilih modul untuk melihat detail:</p>
-            
             <div class="comp-grid">
                 <button class="comp-btn" onclick="showDetail(this, 'dm')">>> DIGITAL MARKETING</button>
                 <button class="comp-btn" onclick="showDetail(this, 'rb')">>> RETAIL BUSINESS</button>
                 <button class="comp-btn" onclick="showDetail(this, 'ps')">>> PUBLIC SPEAKING</button>
                 <button class="comp-btn" onclick="showDetail(this, 'web')">>> WEB DEV</button>
             </div>
-
             <div id="desc-output" class="desc-box">
                 // SYSTEM_IDLE: Menunggu input user...
             </div>
@@ -266,28 +210,23 @@
         <div id="gallery" class="slide">
             <h2>// DATABASE FOTO</h2>
             <p style="font-size: 0.75rem; color:#888;">*Menampilkan data dari folder Img/</p>
-            
             <div class="gallery-grid">
                 <div class="gallery-item">
-                    <img src="Img/foto1.jpg" alt="Foto Kelas" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=404+ERROR'">
+                    <img src="Img/foto1.jpg" alt="Foto 1" onerror="this.src='https://via.placeholder.com/300?text=FILE+NOT+FOUND'">
                     <div class="caption">KELAS_XI_BDP.JPG</div>
                 </div>
-
                 <div class="gallery-item">
-                    <img src="Img/foto2.jpg" alt="Kegiatan 2" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=404+ERROR'">
-                    <div class="caption">ACTIVITY_LOG_02.JPG</div>
+                    <img src="Img/foto2.jpg" alt="Foto 2" onerror="this.src='https://via.placeholder.com/300?text=FILE+NOT+FOUND'">
+                    <div class="caption">ACTIVITY_02.JPG</div>
                 </div>
-
                 <div class="gallery-item">
-                    <img src="Img/foto3.jpg" alt="Kegiatan 3" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=404+ERROR'">
-                    <div class="caption">ACTIVITY_LOG_03.JPG</div>
+                    <img src="Img/foto3.jpg" alt="Foto 3" onerror="this.src='https://via.placeholder.com/300?text=FILE+NOT+FOUND'">
+                    <div class="caption">ACTIVITY_03.JPG</div>
                 </div>
-
                 <div class="gallery-item">
-                    <img src="Img/foto4.jpg" alt="Kegiatan 4" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=404+ERROR'">
-                    <div class="caption">ACTIVITY_LOG_04.JPG</div>
+                    <img src="Img/foto4.jpg" alt="Foto 4" onerror="this.src='https://via.placeholder.com/300?text=FILE+NOT+FOUND'">
+                    <div class="caption">ACTIVITY_04.JPG</div>
                 </div>
-
             </div>
         </div>
 
@@ -300,22 +239,19 @@
     </div>
 
     <script>
+        /* --- MATRIX BACKGROUND --- */
         const canvas = document.getElementById("matrix-bg");
         const ctx = canvas.getContext("2d");
         let drops = [];
-
         function initMatrix() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             drops = Array(Math.ceil(canvas.width / 20)).fill(1);
         }
-
         function drawMatrix() {
             ctx.fillStyle = "rgba(0, 0, 0, 0.08)"; 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#00FF41"; 
-            ctx.font = "15px monospace";
-            
+            ctx.fillStyle = "#00FF41"; ctx.font = "15px monospace";
             for (let i = 0; i < drops.length; i++) {
                 const text = String.fromCharCode(0x30A0 + Math.random() * 96);
                 ctx.fillText(text, i * 20, drops[i] * 20);
@@ -323,19 +259,36 @@
                 drops[i]++;
             }
         }
-
         window.addEventListener('resize', initMatrix);
         initMatrix();
         setInterval(drawMatrix, 50);
 
+        /* --- LOGIKA AUDIO & NAVIGASI --- */
         const startBtn = document.getElementById('start-btn');
         const overlay = document.getElementById('overlay');
         const mainContent = document.getElementById('main-content');
         const bgm = document.getElementById('bgm');
+        const musicStatus = document.getElementById('music-status');
+
+        // Cek jika file musik error (salah folder/nama)
+        bgm.addEventListener('error', function(e) {
+            console.log("Error Musik:", e);
+            musicStatus.innerHTML = "<span style='color:red'>ERROR: Musik tidak ditemukan. Cek folder Img vs img!</span>";
+        });
 
         startBtn.addEventListener('click', () => {
-            bgm.volume = 0.6; 
-            bgm.play().catch(e => console.log("Audio play failed:", e));
+            // Paksa play musik
+            bgm.volume = 0.8;
+            var playPromise = bgm.play();
+
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    console.log("Musik berputar!");
+                })
+                .catch(error => {
+                    console.log("Browser memblokir autoplay, atau file 404.");
+                });
+            }
             
             overlay.style.opacity = '0';
             setTimeout(() => {
@@ -361,7 +314,6 @@
         function showDetail(btn, key) {
             document.querySelectorAll('.comp-btn').forEach(b => b.classList.remove('active-comp'));
             btn.classList.add('active-comp');
-            
             const output = document.getElementById('desc-output');
             output.innerHTML = `<span style="color:white;">>> LOADING DATA...</span>`;
             setTimeout(() => {
