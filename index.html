@@ -45,6 +45,7 @@
             padding: 20px 40px; font-size: 1.2rem; font-weight: bold; letter-spacing: 3px;
             cursor: pointer; text-transform: uppercase; box-shadow: 0 0 15px var(--neon-dark);
             transition: 0.2s;
+            margin-bottom: 20px;
         }
         .btn-start:active { background: var(--neon); color: black; box-shadow: 0 0 40px var(--neon); }
 
@@ -91,26 +92,16 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         h2 { border-left: 4px solid var(--neon); padding-left: 15px; margin-top: 0; font-size: 1.4rem; color: white; }
 
-        /* === FITUR BARU: TEKS BERJALAN CSS (ANTI MACET) === */
-        .marquee-container {
+        /* 7. MARQUEE STYLE */
+        .marquee-box {
             border: 1px solid var(--neon-dark);
             padding: 10px;
-            overflow: hidden;
-            white-space: nowrap;
             background: rgba(0, 20, 0, 0.5);
-        }
-        .marquee-text {
-            display: inline-block;
-            padding-left: 100%; /* Mulai dari luar layar kanan */
-            animation: scroll-left 15s linear infinite; /* Kecepatan 15 detik */
             font-weight: bold;
-        }
-        @keyframes scroll-left {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
+            color: var(--neon);
         }
 
-        /* 7. GALERI (FIX FOLDER Img/) */
+        /* 8. GALERI (FIX FOLDER img/) */
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-top: 20px; }
         .gallery-item {
             border: 1px solid var(--neon-dark); position: relative; height: 200px; overflow: hidden;
@@ -128,7 +119,7 @@
             font-size: 0.7rem; padding: 5px; text-align: center; border-top: 1px solid var(--neon-dark);
         }
 
-        /* 8. KOMPETENSI */
+        /* 9. KOMPETENSI */
         .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .comp-btn {
             padding: 15px; border: 1px solid var(--neon-dark); background: rgba(0,20,0,0.3); 
@@ -138,6 +129,16 @@
         .desc-box {
             border: 1px dashed var(--neon); padding: 15px; min-height: 80px; background: rgba(0,0,0,0.5); font-size: 0.9rem;
         }
+        
+        /* Tombol Musik Manual (Muncul di Header) */
+        .music-control {
+            margin-top: 10px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            color: #888;
+            text-decoration: underline;
+        }
+
         footer { text-align: center; margin-top: 30px; font-size: 0.7rem; opacity: 0.6; padding-bottom: 20px; }
     </style>
 </head>
@@ -147,20 +148,26 @@
     <div class="scanlines"></div>
 
     <audio id="bgm" loop preload="auto">
-        <source src="Img/musik.mp3" type="audio/mpeg">
+        <source src="img/musik.mp3" type="audio/mpeg">
     </audio>
 
     <div id="overlay">
         <div style="font-size: 3rem; margin-bottom: 20px;">🔒</div>
         <p style="margin-bottom: 30px; letter-spacing: 2px;">SECURE CONNECTION ESTABLISHED</p>
+        
         <button class="btn-start" id="start-btn">[ AKSES DATA ]</button>
-        <p id="music-status" style="margin-top: 20px; font-size: 0.7rem; color: #555;">*Klik untuk mengaktifkan Suara & Visual</p>
+        
+        <p id="music-status" style="font-size: 0.8rem; color: #555;">*Klik tombol di atas untuk masuk</p>
     </div>
 
     <div class="container" id="main-content">
         <header>
             <h1>SMK NURUL FALAH</h1>
             <p class="subtitle">XI BDP - PEMASARAN</p>
+            
+            <div class="music-control" onclick="forcePlayMusic()">
+                [ Musik Mati? Klik Di Sini Untuk Memutar ]
+            </div>
         </header>
 
         <nav>
@@ -174,10 +181,11 @@
             <h2>// SELAMAT DATANG</h2>
             <p>Selamat datang di portal informasi digital XI BDP. Website ini dirancang sebagai media pembelajaran interaktif.</p>
             <br>
-            <div class="marquee-container">
-                <div class="marquee-text">
-                    [INFO] SELAMAT MENGERJAKAN PROJECT. JANGAN LUPA UPDATE PROGRESS DI GITHUB! --- PERHATIKAN TANGGAL PENGUMPULAN TUGAS!
-                </div>
+            
+            <div class="marquee-box">
+                <marquee scrollamount="8" direction="left">
+                    [INFO] SELAMAT MENGERJAKAN PROJECT. JANGAN LUPA UPDATE PROGRESS DI GITHUB! --- SEMANGAT BELAJAR KODING! ---
+                </marquee>
             </div>
         </div>
 
@@ -209,22 +217,22 @@
 
         <div id="gallery" class="slide">
             <h2>// DATABASE FOTO</h2>
-            <p style="font-size: 0.75rem; color:#888;">*Menampilkan data dari folder Img/</p>
+            <p style="font-size: 0.75rem; color:#888;">*Menampilkan data dari folder img/</p>
             <div class="gallery-grid">
                 <div class="gallery-item">
-                    <img src="Img/foto1.jpg" alt="Foto 1" onerror="this.src='https://via.placeholder.com/300?text=FILE+NOT+FOUND'">
+                    <img src="img/foto1.jpg" alt="Foto 1" onerror="this.src='https://via.placeholder.com/300?text=FILE+NOT+FOUND'">
                     <div class="caption">KELAS_XI_BDP.JPG</div>
                 </div>
                 <div class="gallery-item">
-                    <img src="Img/foto2.jpg" alt="Foto 2" onerror="this.src='https://via.placeholder.com/300?text=FILE+NOT+FOUND'">
+                    <img src="img/foto2.jpg" alt="Foto 2" onerror="this.src='https://via.placeholder.com/300?text=FILE+NOT+FOUND'">
                     <div class="caption">ACTIVITY_02.JPG</div>
                 </div>
                 <div class="gallery-item">
-                    <img src="Img/foto3.jpg" alt="Foto 3" onerror="this.src='https://via.placeholder.com/300?text=FILE+NOT+FOUND'">
+                    <img src="img/foto3.jpg" alt="Foto 3" onerror="this.src='https://via.placeholder.com/300?text=FILE+NOT+FOUND'">
                     <div class="caption">ACTIVITY_03.JPG</div>
                 </div>
                 <div class="gallery-item">
-                    <img src="Img/foto4.jpg" alt="Foto 4" onerror="this.src='https://via.placeholder.com/300?text=FILE+NOT+FOUND'">
+                    <img src="img/foto4.jpg" alt="Foto 4" onerror="this.src='https://via.placeholder.com/300?text=FILE+NOT+FOUND'">
                     <div class="caption">ACTIVITY_04.JPG</div>
                 </div>
             </div>
@@ -270,25 +278,27 @@
         const bgm = document.getElementById('bgm');
         const musicStatus = document.getElementById('music-status');
 
-        // Cek jika file musik error (salah folder/nama)
+        // DETEKSI ERROR MUSIK
         bgm.addEventListener('error', function(e) {
-            console.log("Error Musik:", e);
-            musicStatus.innerHTML = "<span style='color:red'>ERROR: Musik tidak ditemukan. Cek folder Img vs img!</span>";
+            musicStatus.innerHTML = "<span style='color:red; font-weight:bold;'>ERROR: File Musik Tidak Ditemukan! Cek nama folder (img vs Img)</span>";
         });
 
-        startBtn.addEventListener('click', () => {
-            // Paksa play musik
+        // FUNGSI PAKSA PUTAR
+        function forcePlayMusic() {
             bgm.volume = 0.8;
-            var playPromise = bgm.play();
+            bgm.play().then(() => {
+                alert("Musik berhasil diputar!");
+            }).catch(e => {
+                alert("Gagal memutar musik. Pastikan file img/musik.mp3 ada di GitHub.");
+            });
+        }
 
-            if (playPromise !== undefined) {
-                playPromise.then(_ => {
-                    console.log("Musik berputar!");
-                })
-                .catch(error => {
-                    console.log("Browser memblokir autoplay, atau file 404.");
-                });
-            }
+        startBtn.addEventListener('click', () => {
+            // Coba putar musik
+            bgm.volume = 0.8;
+            bgm.play().catch(error => {
+                console.log("Autoplay dicegah browser, coba tombol manual.");
+            });
             
             overlay.style.opacity = '0';
             setTimeout(() => {
