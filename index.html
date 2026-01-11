@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMK NURUL FALAH | SYSTEM V.FINAL</title>
+    <title>SMK NURUL FALAH | SISTEM INFORMASI</title>
     <style>
-        /* 1. CONFIG VISUAL */
+        /* 1. CONFIG VISUAL (TEMA MATRIX TETAP ADA, TAPI LEBIH BERSIH) */
         :root {
             --neon: #00FF41;          
             --neon-dark: #003300;     
             --bg-color: #000000;      
             --glass: rgba(0, 10, 0, 0.9); 
-            --font-main: 'Courier New', monospace;
+            --font-main: 'Courier New', monospace; /* Font tetap Matrix */
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -26,15 +26,14 @@
         }
 
         /* 2. BACKGROUND */
-        canvas#matrix-bg { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.8; }
+        canvas#matrix-bg { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.6; } /* Opacity dikurangi agar teks lebih terbaca */
         .scanlines { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); 
-            background-size: 100% 4px, 3px 100%; pointer-events: none; z-index: 1; 
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px; pointer-events: none; z-index: 1; 
         }
 
-        /* 3. LOCKSCREEN */
+        /* 3. HALAMAN PEMBUKA (LOCKSCREEN) */
         #overlay {
             position: fixed; inset: 0; background: black; z-index: 9999;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -42,104 +41,103 @@
         }
         .btn-start {
             border: 2px solid var(--neon); background: transparent; color: var(--neon);
-            padding: 20px 40px; font-size: 1.2rem; font-weight: bold; letter-spacing: 3px;
+            padding: 15px 40px; font-size: 1.1rem; font-weight: bold; letter-spacing: 2px;
             cursor: pointer; text-transform: uppercase; box-shadow: 0 0 15px var(--neon-dark);
-            transition: 0.2s;
-            margin-bottom: 20px;
+            transition: 0.2s; margin-bottom: 20px;
         }
         .btn-start:active { background: var(--neon); color: black; box-shadow: 0 0 40px var(--neon); }
 
-        /* 4. LAYOUT */
+        /* 4. LAYOUT UTAMA */
         .container {
             position: relative; z-index: 10;
             max-width: 900px; margin: 0 auto; padding: 20px;
             display: none; padding-bottom: 100px;
         }
         header {
-            text-align: center; border: 1px solid var(--neon);
+            text-align: center; border-bottom: 2px solid var(--neon);
             padding: 20px; margin-bottom: 20px; background: var(--glass);
-            box-shadow: 0 0 15px var(--neon-dark); border-radius: 5px;
+            border-radius: 5px; position: relative;
         }
+        
+        /* Tombol Musik Manual di Header */
+        .music-toggle {
+            position: absolute; top: 10px; right: 10px;
+            font-size: 0.7rem; border: 1px solid var(--neon); padding: 5px 10px;
+            cursor: pointer; background: black;
+        }
+        .music-toggle:active { background: var(--neon); color: black; }
+
         h1 { 
             margin: 0; font-size: 1.8rem; text-transform: uppercase; 
-            text-shadow: 2px 0 var(--neon-dark);
-            animation: glitch 3s infinite alternate-reverse; 
+            margin-bottom: 5px;
         }
-        @keyframes glitch { 
-            0%{transform:translate(0)} 20%{transform:translate(-2px,1px)} 
-            40%{transform:translate(-1px,-1px)} 60%{transform:translate(1px,2px)} 
-            80%{transform:translate(1px,-1px)} 100%{transform:translate(0)} 
-        }
-        .subtitle { margin-top: 10px; font-size: 0.9rem; border-top: 1px solid var(--neon-dark); padding-top: 5px; display: inline-block; }
+        
+        .subtitle { font-size: 1rem; font-weight: bold; border-top: 1px solid var(--neon-dark); display: inline-block; padding-top: 5px; }
 
-        /* 5. NAVIGASI */
+        /* 5. NAVIGASI (TOMBOL MENU) */
         nav { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
         .nav-btn {
             background: rgba(0, 20, 0, 0.6); color: var(--neon); border: 1px solid var(--neon-dark);
-            padding: 12px 20px; cursor: pointer; font-family: inherit; font-weight: bold; font-size: 0.85rem;
+            padding: 10px 20px; cursor: pointer; font-family: inherit; font-weight: bold; font-size: 0.9rem;
             transition: 0.3s;
         }
         .nav-btn:hover, .nav-btn.active {
-            background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); border-color: var(--neon);
+            background: var(--neon); color: black; box-shadow: 0 0 10px var(--neon);
         }
 
-        /* 6. SLIDE CONTENT */
+        /* 6. KONTEN HALAMAN */
         .slide {
-            display: none; background: var(--glass); border: 1px solid var(--neon-dark);
-            padding: 25px; border-radius: 5px; animation: fadeIn 0.5s ease-out;
+            display: none; background: rgba(0, 10, 0, 0.85); border: 1px solid var(--neon-dark);
+            padding: 30px; border-radius: 5px; animation: fadeIn 0.5s ease-out;
+            line-height: 1.6; /* Spasi antar baris agar mudah dibaca guru */
         }
         .slide.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        h2 { border-left: 4px solid var(--neon); padding-left: 15px; margin-top: 0; font-size: 1.4rem; color: white; }
-
-        /* 7. MARQUEE STYLE */
-        .marquee-box {
-            border: 1px solid var(--neon-dark);
-            padding: 10px;
-            background: rgba(0, 20, 0, 0.5);
-            font-weight: bold;
-            color: var(--neon);
+        
+        /* Judul Halaman (Bersih tanpa //) */
+        h2 { 
+            border-bottom: 1px solid var(--neon); padding-bottom: 10px; 
+            margin-top: 0; font-size: 1.5rem; color: white; margin-bottom: 20px;
         }
 
-        /* 8. GALERI (FIX FOLDER img/) */
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-top: 20px; }
+        /* 7. TEXT BERJALAN (MARQUEE) - FORMAL */
+        .marquee-box {
+            border: 1px solid var(--neon-dark); padding: 8px;
+            background: rgba(0, 30, 0, 0.5); font-weight: bold; color: white;
+            margin-top: 20px; font-size: 0.9rem;
+        }
+
+        /* 8. GALERI */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 20px; }
         .gallery-item {
-            border: 1px solid var(--neon-dark); position: relative; height: 200px; overflow: hidden;
-            border-radius: 10px; transition: all 0.3s ease;
+            border: 1px solid var(--neon-dark); position: relative; height: 180px; overflow: hidden;
+            border-radius: 5px; transition: all 0.3s ease;
         }
         .gallery-item:hover { 
-            border-color: var(--neon); transform: scale(1.03); 
-            box-shadow: 0 0 15px var(--neon), 0 0 30px var(--neon-dark); z-index: 2;
+            border-color: var(--neon); transform: scale(1.02); 
+            box-shadow: 0 0 10px var(--neon); z-index: 2;
         }
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.3s; }
-        .gallery-item:hover img { opacity: 1; }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
+        
+        /* Caption Foto (Formal) */
         .caption {
             position: absolute; bottom: 0; left: 0; width: 100%;
-            background: rgba(0,0,0,0.8); color: var(--neon);
-            font-size: 0.7rem; padding: 5px; text-align: center; border-top: 1px solid var(--neon-dark);
+            background: rgba(0,0,0,0.9); color: white;
+            font-size: 0.75rem; padding: 5px; text-align: center; border-top: 1px solid var(--neon-dark);
         }
 
-        /* 9. KOMPETENSI */
+        /* 9. KOMPETENSI KEAHLIAN */
         .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .comp-btn {
             padding: 15px; border: 1px solid var(--neon-dark); background: rgba(0,20,0,0.3); 
-            color: var(--neon); cursor: pointer; text-align: left; font-family: inherit;
+            color: var(--neon); cursor: pointer; text-align: left; font-family: inherit; font-weight: bold;
         }
-        .comp-btn.active-comp { background: var(--neon); color: black; box-shadow: 0 0 10px var(--neon); }
+        .comp-btn.active-comp { background: var(--neon); color: black; }
         .desc-box {
-            border: 1px dashed var(--neon); padding: 15px; min-height: 80px; background: rgba(0,0,0,0.5); font-size: 0.9rem;
+            border: 1px solid var(--neon); padding: 20px; min-height: 80px; background: rgba(0,0,0,0.3); font-size: 1rem; color: white;
         }
         
-        /* Tombol Musik Manual (Muncul di Header) */
-        .music-control {
-            margin-top: 10px;
-            font-size: 0.7rem;
-            cursor: pointer;
-            color: #888;
-            text-decoration: underline;
-        }
-
-        footer { text-align: center; margin-top: 30px; font-size: 0.7rem; opacity: 0.6; padding-bottom: 20px; }
+        footer { text-align: center; margin-top: 40px; font-size: 0.8rem; opacity: 0.8; padding-bottom: 20px; border-top: 1px solid var(--neon-dark); padding-top: 20px; }
     </style>
 </head>
 <body>
@@ -153,21 +151,18 @@
 
     <div id="overlay">
         <div style="font-size: 3rem; margin-bottom: 20px;">🔒</div>
-        <p style="margin-bottom: 30px; letter-spacing: 2px;">SECURE CONNECTION ESTABLISHED</p>
+        <p style="margin-bottom: 30px; letter-spacing: 2px; font-weight: bold;">SISTEM INFORMASI BDP</p>
         
-        <button class="btn-start" id="start-btn">[ AKSES DATA ]</button>
+        <button class="btn-start" id="start-btn">MASUK KE WEBSITE</button>
         
-        <p id="music-status" style="font-size: 0.8rem; color: #555;">*Klik tombol di atas untuk masuk</p>
+        <p id="music-status" style="font-size: 0.8rem; color: #888;">Klik tombol di atas untuk memulai</p>
     </div>
 
     <div class="container" id="main-content">
         <header>
+            <div class="music-toggle" onclick="forcePlayMusic()">🔊 PUTAR MUSIK</div>
             <h1>SMK NURUL FALAH</h1>
-            <p class="subtitle">XI BDP - PEMASARAN</p>
-            
-            <div class="music-control" onclick="forcePlayMusic()">
-                [ Musik Mati? Klik Di Sini Untuk Memutar ]
-            </div>
+            <span class="subtitle">KELAS XI BDP - PEMASARAN</span>
         </header>
 
         <nav>
@@ -178,76 +173,76 @@
         </nav>
 
         <div id="home" class="slide active">
-            <h2>// SELAMAT DATANG</h2>
-            <p>Selamat datang di portal informasi digital XI BDP. Website ini dirancang sebagai media pembelajaran interaktif.</p>
-            <br>
+            <h2>SELAMAT DATANG</h2>
+            <p>Selamat datang di portal informasi digital Kelas XI BDP. Website ini dirancang sebagai media pembelajaran interaktif untuk memudahkan akses informasi sekolah.</p>
             
             <div class="marquee-box">
-                <marquee scrollamount="8" direction="left">
-                    [INFO] SELAMAT MENGERJAKAN PROJECT. JANGAN LUPA UPDATE PROGRESS DI GITHUB! --- SEMANGAT BELAJAR KODING! ---
+                <marquee scrollamount="6" direction="left">
+                    INFORMASI PENTING: Mohon kepada seluruh siswa untuk segera melengkapi tugas Produk Kreatif sebelum tanggal 25 Januari. Tetap semangat belajar!
                 </marquee>
             </div>
         </div>
 
         <div id="visi" class="slide">
-            <h2>// VISI & MISI</h2>
+            <h2>VISI DAN MISI</h2>
             <p><strong>VISI:</strong><br>Menjadikan lulusan yang kompeten, berakhlak mulia, dan siap bersaing di era digital.</p>
             <hr style="border: 0; border-top: 1px solid var(--neon-dark); margin: 15px 0;">
             <p><strong>MISI:</strong></p>
             <ul>
-                <li>Mengembangkan kemampuan Public Speaking.</li>
-                <li>Menguasai teknik Digital Marketing terkini.</li>
-                <li>Menumbuhkan jiwa kewirausahaan (Entrepreneur).</li>
+                <li>Mengembangkan kemampuan berbicara di depan umum (Public Speaking).</li>
+                <li>Menguasai teknik Pemasaran Digital (Digital Marketing) terkini.</li>
+                <li>Menumbuhkan jiwa kewirausahaan (Entrepreneur) yang tangguh.</li>
             </ul>
         </div>
 
         <div id="prodi" class="slide">
-            <h2>// KOMPETENSI KEAHLIAN</h2>
-            <p style="font-size: 0.8rem; margin-bottom: 10px;">> Pilih modul untuk melihat detail:</p>
+            <h2>KOMPETENSI KEAHLIAN</h2>
+            <p style="margin-bottom: 15px;">Silakan pilih modul materi di bawah ini untuk melihat deskripsi:</p>
             <div class="comp-grid">
-                <button class="comp-btn" onclick="showDetail(this, 'dm')">>> DIGITAL MARKETING</button>
-                <button class="comp-btn" onclick="showDetail(this, 'rb')">>> RETAIL BUSINESS</button>
-                <button class="comp-btn" onclick="showDetail(this, 'ps')">>> PUBLIC SPEAKING</button>
-                <button class="comp-btn" onclick="showDetail(this, 'web')">>> WEB DEV</button>
+                <button class="comp-btn" onclick="showDetail(this, 'dm')">DIGITAL MARKETING</button>
+                <button class="comp-btn" onclick="showDetail(this, 'rb')">RETAIL BUSINESS</button>
+                <button class="comp-btn" onclick="showDetail(this, 'ps')">PUBLIC SPEAKING</button>
+                <button class="comp-btn" onclick="showDetail(this, 'web')">WEB DEVELOPMENT</button>
             </div>
             <div id="desc-output" class="desc-box">
-                // SYSTEM_IDLE: Menunggu input user...
+                Silakan klik salah satu tombol materi di atas.
             </div>
         </div>
 
         <div id="gallery" class="slide">
-            <h2>// DATABASE FOTO</h2>
-            <p style="font-size: 0.75rem; color:#888;">*Menampilkan data dari folder img/</p>
+            <h2>DOKUMENTASI KEGIATAN</h2>
+            <p style="font-size: 0.8rem; color:#ccc; margin-bottom: 10px;">Arsip foto kegiatan siswa:</p>
             <div class="gallery-grid">
                 <div class="gallery-item">
-                    <img src="img/foto1.jpg" alt="Foto 1" onerror="this.src='https://via.placeholder.com/300?text=FILE+NOT+FOUND'">
-                    <div class="caption">KELAS_XI_BDP.JPG</div>
+                    <img src="img/foto1.jpg" alt="Foto 1" onerror="this.src='https://via.placeholder.com/300?text=FOTO+TIDAK+ADA'">
+                    <div class="caption">FOTO BERSAMA KELAS XI BDP</div>
                 </div>
                 <div class="gallery-item">
-                    <img src="img/foto2.jpg" alt="Foto 2" onerror="this.src='https://via.placeholder.com/300?text=FILE+NOT+FOUND'">
-                    <div class="caption">ACTIVITY_02.JPG</div>
+                    <img src="img/foto2.jpg" alt="Foto 2" onerror="this.src='https://via.placeholder.com/300?text=FOTO+TIDAK+ADA'">
+                    <div class="caption">KEGIATAN BELAJAR 1</div>
                 </div>
                 <div class="gallery-item">
-                    <img src="img/foto3.jpg" alt="Foto 3" onerror="this.src='https://via.placeholder.com/300?text=FILE+NOT+FOUND'">
-                    <div class="caption">ACTIVITY_03.JPG</div>
+                    <img src="img/foto3.jpg" alt="Foto 3" onerror="this.src='https://via.placeholder.com/300?text=FOTO+TIDAK+ADA'">
+                    <div class="caption">KEGIATAN BELAJAR 2</div>
                 </div>
                 <div class="gallery-item">
-                    <img src="img/foto4.jpg" alt="Foto 4" onerror="this.src='https://via.placeholder.com/300?text=FILE+NOT+FOUND'">
-                    <div class="caption">ACTIVITY_04.JPG</div>
+                    <img src="img/foto4.jpg" alt="Foto 4" onerror="this.src='https://via.placeholder.com/300?text=FOTO+TIDAK+ADA'">
+                    <div class="caption">KEGIATAN BELAJAR 3</div>
                 </div>
             </div>
         </div>
 
         <footer>
              <a href="https://wa.me/6281234567890" target="_blank" style="text-decoration: none; color: var(--neon); font-weight: bold;">
-                CONTACTS AUTHOR OF ARLING
+                HUBUNGI PENULIS (ARLING)
             </a> 
-            &bull; SMK NURUL FALAH
+            <br><br>
+            SMK NURUL FALAH &copy; 2026
         </footer>
     </div>
 
     <script>
-        /* --- MATRIX BACKGROUND --- */
+        /* --- MATRIX BACKGROUND (Dibuat lebih halus) --- */
         const canvas = document.getElementById("matrix-bg");
         const ctx = canvas.getContext("2d");
         let drops = [];
@@ -257,7 +252,7 @@
             drops = Array(Math.ceil(canvas.width / 20)).fill(1);
         }
         function drawMatrix() {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.08)"; 
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = "#00FF41"; ctx.font = "15px monospace";
             for (let i = 0; i < drops.length; i++) {
@@ -271,35 +266,37 @@
         initMatrix();
         setInterval(drawMatrix, 50);
 
-        /* --- LOGIKA AUDIO & NAVIGASI --- */
+        /* --- SISTEM AUDIO DAN NAVIGASI --- */
         const startBtn = document.getElementById('start-btn');
         const overlay = document.getElementById('overlay');
         const mainContent = document.getElementById('main-content');
         const bgm = document.getElementById('bgm');
         const musicStatus = document.getElementById('music-status');
 
-        // DETEKSI ERROR MUSIK
+        // Cek Error Musik
         bgm.addEventListener('error', function(e) {
-            musicStatus.innerHTML = "<span style='color:red; font-weight:bold;'>ERROR: File Musik Tidak Ditemukan! Cek nama folder (img vs Img)</span>";
+            alert("Sistem mendeteksi file musik tidak ditemukan. Pastikan nama folder di GitHub adalah 'img' (huruf kecil) dan ada file 'musik.mp3'.");
+            musicStatus.innerHTML = "<span style='color:red;'>Error: Musik Gagal Dimuat</span>";
         });
 
-        // FUNGSI PAKSA PUTAR
+        // Fungsi Putar Musik Manual
         function forcePlayMusic() {
-            bgm.volume = 0.8;
+            bgm.volume = 1.0;
             bgm.play().then(() => {
-                alert("Musik berhasil diputar!");
+                alert("Musik sedang diputar.");
             }).catch(e => {
-                alert("Gagal memutar musik. Pastikan file img/musik.mp3 ada di GitHub.");
+                alert("Browser memblokir musik atau file tidak ada. Coba klik lagi.");
             });
         }
 
         startBtn.addEventListener('click', () => {
-            // Coba putar musik
-            bgm.volume = 0.8;
+            // Usaha memutar musik otomatis
+            bgm.volume = 1.0;
             bgm.play().catch(error => {
-                console.log("Autoplay dicegah browser, coba tombol manual.");
+                console.log("Autoplay dicegah browser. Gunakan tombol manual.");
             });
             
+            // Efek transisi masuk
             overlay.style.opacity = '0';
             setTimeout(() => {
                 overlay.style.display = 'none';
@@ -314,20 +311,21 @@
             btn.classList.add('active');
         }
 
+        // DATA MATERI (Bahasa Formal)
         const materiData = {
-            'dm': 'Strategi pemasaran menggunakan media digital (IG, TikTok, FB Ads) untuk menjangkau audiens secara luas dan efektif.',
-            'rb': 'Manajemen bisnis ritel mulai dari penataan produk (display), stok opname, hingga pelayanan prima kepada pelanggan.',
-            'ps': 'Seni berbicara di depan umum untuk meyakinkan audiens, presentasi produk, dan negosiasi bisnis.',
-            'web': 'Dasar pengembangan website menggunakan HTML, CSS, dan JavaScript untuk membuat toko online sendiri.'
+            'dm': 'Strategi pemasaran menggunakan media digital (Instagram, TikTok, FB Ads) untuk menjangkau audiens secara luas dan efektif.',
+            'rb': 'Manajemen bisnis ritel yang mencakup penataan produk (display), pengelolaan stok, hingga pelayanan prima kepada pelanggan.',
+            'ps': 'Seni berbicara di depan umum untuk meyakinkan audiens, mempresentasikan produk, dan melakukan negosiasi bisnis.',
+            'web': 'Dasar pengembangan website menggunakan HTML, CSS, dan JavaScript untuk membangun toko online yang fungsional.'
         };
 
         function showDetail(btn, key) {
             document.querySelectorAll('.comp-btn').forEach(b => b.classList.remove('active-comp'));
             btn.classList.add('active-comp');
             const output = document.getElementById('desc-output');
-            output.innerHTML = `<span style="color:white;">>> LOADING DATA...</span>`;
+            output.innerHTML = `Sedang memuat data...`;
             setTimeout(() => {
-                output.innerHTML = materiData[key] + '<span class="cursor">_</span>';
+                output.innerHTML = materiData[key];
             }, 300);
         }
     </script>
