@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SMK NURUL FALAH | SYSTEM V.FINAL</title>
     <style>
-        /* --- 1. CONFIG VISUAL --- */
+        /* =========================================
+           1. CONFIG VISUAL (TEMA MATRIX)
+           ========================================= */
         :root {
             --neon: #00FF41;          /* Hijau Matrix Terang */
             --neon-dark: #003300;     /* Hijau Gelap */
@@ -14,7 +16,10 @@
             --font-main: 'Courier New', monospace;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+        }
 
         body {
             margin: 0; padding: 0;
@@ -25,10 +30,13 @@
             min-height: 100vh;
         }
 
-        /* --- 2. MATRIX BACKGROUND (HIGH CONTRAST) --- */
+        /* =========================================
+           2. BACKGROUND & EFEK VISUAL
+           ========================================= */
+        /* Kanvas Hujan Kode */
         canvas#matrix-bg { 
             position: fixed; top: 0; left: 0; z-index: -1; 
-            opacity: 0.8; /* Kontras dinaikkan agar hujan kode terlihat jelas */
+            opacity: 0.8; 
         }
         
         /* Efek Garis TV (Scanlines) */
@@ -36,10 +44,13 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
                         linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); 
-            background-size: 100% 4px, 3px 100%; pointer-events: none; z-index: 1; 
+            background-size: 100% 4px, 3px 100%; 
+            pointer-events: none; z-index: 1; 
         }
 
-        /* --- 3. LOCKSCREEN (Audio Trigger) --- */
+        /* =========================================
+           3. LOCKSCREEN (Tombol Start)
+           ========================================= */
         #overlay {
             position: fixed; inset: 0; background: black; z-index: 9999;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -52,39 +63,52 @@
             cursor: pointer; text-transform: uppercase; box-shadow: 0 0 15px var(--neon-dark);
             transition: 0.2s;
         }
-        .btn-start:active { background: var(--neon); color: black; box-shadow: 0 0 40px var(--neon); }
+        .btn-start:active { 
+            background: var(--neon); color: black; box-shadow: 0 0 40px var(--neon); 
+        }
 
-        /* --- 4. CONTAINER UTAMA --- */
+        /* =========================================
+           4. LAYOUT UTAMA
+           ========================================= */
         .container {
             position: relative; z-index: 10;
             max-width: 900px; margin: 0 auto; padding: 20px;
-            display: none; /* Hidden awal */
+            display: none; /* Disembunyikan sampai tombol Start diklik */
             padding-bottom: 100px;
         }
 
-        /* --- 5. HEADER & GLITCH --- */
+        /* Header dengan Efek Glitch */
         header {
             text-align: center; border: 1px solid var(--neon);
             padding: 20px; margin-bottom: 20px; background: var(--glass);
             box-shadow: 0 0 15px var(--neon-dark); border-radius: 5px;
         }
 
-        /* Animasi Glitch (Efek Error Halus) */
         h1 { 
             margin: 0; font-size: 1.8rem; text-transform: uppercase; 
             text-shadow: 2px 0 var(--neon-dark);
             animation: glitch 3s infinite alternate-reverse; 
         }
+
         @keyframes glitch { 
             0%{transform:translate(0)} 20%{transform:translate(-2px,1px)} 
             40%{transform:translate(-1px,-1px)} 60%{transform:translate(1px,2px)} 
             80%{transform:translate(1px,-1px)} 100%{transform:translate(0)} 
         }
 
-        .subtitle { margin-top: 10px; font-size: 0.9rem; border-top: 1px solid var(--neon-dark); padding-top: 5px; display: inline-block; }
+        .subtitle { 
+            margin-top: 10px; font-size: 0.9rem; 
+            border-top: 1px solid var(--neon-dark); padding-top: 5px; 
+            display: inline-block; 
+        }
 
-        /* --- 6. NAVIGASI --- */
-        nav { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        /* =========================================
+           5. NAVIGASI
+           ========================================= */
+        nav { 
+            display: flex; justify-content: center; gap: 10px; 
+            margin-bottom: 20px; flex-wrap: wrap; 
+        }
         
         .nav-btn {
             background: rgba(0, 20, 0, 0.6); color: var(--neon); border: 1px solid var(--neon-dark);
@@ -92,29 +116,46 @@
             transition: 0.3s;
         }
         .nav-btn:hover, .nav-btn.active {
-            background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); border-color: var(--neon);
+            background: var(--neon); color: black; 
+            box-shadow: 0 0 15px var(--neon); border-color: var(--neon);
         }
 
-        /* --- 7. SLIDE CONTENT --- */
+        /* =========================================
+           6. KONTEN (SLIDE)
+           ========================================= */
         .slide {
             display: none; background: var(--glass); border: 1px solid var(--neon-dark);
             padding: 25px; border-radius: 5px; animation: fadeIn 0.5s ease-out;
         }
         .slide.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
 
-        h2 { border-left: 4px solid var(--neon); padding-left: 15px; margin-top: 0; font-size: 1.4rem; color: white; }
+        h2 { 
+            border-left: 4px solid var(--neon); padding-left: 15px; 
+            margin-top: 0; font-size: 1.4rem; color: white; 
+        }
 
-        /* --- 8. GALERI (GITHUB READY) --- */
+        /* =========================================
+           7. GALERI GRID
+           ========================================= */
         .gallery-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-top: 20px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
+            gap: 15px; margin-top: 20px;
         }
         .gallery-item {
             border: 1px solid var(--neon-dark); position: relative; height: 200px; overflow: hidden;
             transition: 0.3s;
         }
-        .gallery-item:hover { border-color: var(--neon); transform: scale(1.02); }
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+        .gallery-item:hover { 
+            border-color: var(--neon); transform: scale(1.02); 
+        }
+        .gallery-item img { 
+            width: 100%; height: 100%; object-fit: cover; opacity: 0.8; 
+        }
         .gallery-item:hover img { opacity: 1; }
         
         .caption {
@@ -123,20 +164,29 @@
             font-size: 0.7rem; padding: 5px; text-align: center;
         }
 
-        /* --- 9. KOMPETENSI GRID --- */
-        .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        /* =========================================
+           8. KOMPETENSI GRID
+           ========================================= */
+        .comp-grid { 
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; 
+        }
         .comp-btn {
             padding: 15px; border: 1px solid var(--neon-dark); background: rgba(0,20,0,0.3); 
             color: var(--neon); cursor: pointer; text-align: left; font-family: inherit;
         }
-        .comp-btn.active-comp { background: var(--neon); color: black; box-shadow: 0 0 10px var(--neon); }
+        .comp-btn.active-comp { 
+            background: var(--neon); color: black; box-shadow: 0 0 10px var(--neon); 
+        }
 
         .desc-box {
             border: 1px dashed var(--neon); padding: 15px; min-height: 80px; 
             background: rgba(0,0,0,0.5); font-size: 0.9rem;
         }
 
-        footer { text-align: center; margin-top: 30px; font-size: 0.7rem; opacity: 0.6; padding-bottom: 20px; }
+        footer { 
+            text-align: center; margin-top: 30px; 
+            font-size: 0.7rem; opacity: 0.6; padding-bottom: 20px; 
+        }
     </style>
 </head>
 <body>
@@ -170,24 +220,24 @@
 
         <div id="home" class="slide active">
             <h2>// SELAMAT DATANG</h2>
-            <p>[ MASUKKAN DESKRIPSI PEMBUKA DI SINI... ]</p>
+            <p>Selamat datang di portal informasi digital XI BDP. Website ini dirancang sebagai media pembelajaran interaktif.</p>
             <br>
             <div style="border: 1px solid var(--neon-dark); padding: 10px;">
                 <marquee scrollamount="4">
-                    [ MASUKKAN TEKS BERJALAN / PENGUMUMAN PENTING DI SINI ]
+                    [INFO] JANGAN LUPA MENGUMPULKAN TUGAS PRODUK KREATIF TANGGAL 25 JANUARI!
                 </marquee>
             </div>
         </div>
 
         <div id="visi" class="slide">
             <h2>// VISI & MISI</h2>
-            <p><strong>VISI:</strong><br>[ MASUKKAN TEKS VISI DI SINI... ]</p>
+            <p><strong>VISI:</strong><br>Menjadikan lulusan yang kompeten, berakhlak mulia, dan siap bersaing di era digital.</p>
             <hr style="border: 0; border-top: 1px solid var(--neon-dark); margin: 15px 0;">
             <p><strong>MISI:</strong></p>
             <ul>
-                <li>[ MASUKKAN POIN MISI 1 ]</li>
-                <li>[ MASUKKAN POIN MISI 2 ]</li>
-                <li>[ MASUKKAN POIN MISI 3 ]</li>
+                <li>Mengembangkan kemampuan Public Speaking.</li>
+                <li>Menguasai teknik Digital Marketing terkini.</li>
+                <li>Menumbuhkan jiwa kewirausahaan (Entrepreneur).</li>
             </ul>
         </div>
 
@@ -209,24 +259,23 @@
 
         <div id="gallery" class="slide">
             <h2>// DATABASE FOTO</h2>
-            <p style="font-size: 0.75rem; color:#888;">*Data diambil dari server lokal (Folder img/)</p>
+            <p style="font-size: 0.75rem; color:#888;">*Pastikan foto bernama foto1.jpg, foto2.jpg dst di folder img/</p>
             
             <div class="gallery-grid">
                 <div class="gallery-item">
-                    <img src="img/foto1.jpg" alt="Kegiatan 1" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=ASET_MISSING'">
-                    <div class="caption">DATA_01.JPG</div>
+                    <img src="img/foto1.jpg" alt="Kegiatan 1" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=FILE+MISSING'">
+                    <div class="caption">KEGIATAN_01.JPG</div>
                 </div>
 
                 <div class="gallery-item">
-                    <img src="img/foto2.jpg" alt="Kegiatan 2" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=ASET_MISSING'">
-                    <div class="caption">DATA_02.JPG</div>
+                    <img src="img/foto2.jpg" alt="Kegiatan 2" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=FILE+MISSING'">
+                    <div class="caption">KEGIATAN_02.JPG</div>
                 </div>
 
                 <div class="gallery-item">
-                    <img src="img/foto3.jpg" alt="Kegiatan 3" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=ASET_MISSING'">
-                    <div class="caption">DATA_03.JPG</div>
+                    <img src="img/foto3.jpg" alt="Kegiatan 3" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=FILE+MISSING'">
+                    <div class="caption">KEGIATAN_03.JPG</div>
                 </div>
-
             </div>
         </div>
 
@@ -236,7 +285,7 @@
     </div>
 
     <script>
-        /* --- 1. MATRIX ENGINE (HIGH CONTRAST) --- */
+        /* --- 1. MATRIX ENGINE --- */
         const canvas = document.getElementById("matrix-bg");
         const ctx = canvas.getContext("2d");
         let drops = [];
@@ -244,22 +293,18 @@
         function initMatrix() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            // Kolom lebih rapat
             drops = Array(Math.ceil(canvas.width / 20)).fill(1);
         }
 
         function drawMatrix() {
-            // Background Fade (Opacity rendah = Ekor panjang & Kontras tinggi)
             ctx.fillStyle = "rgba(0, 0, 0, 0.08)"; 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            ctx.fillStyle = "#00FF41"; // Warna Neon Hijau Terang
+            ctx.fillStyle = "#00FF41"; 
             ctx.font = "15px monospace";
             
             for (let i = 0; i < drops.length; i++) {
                 const text = String.fromCharCode(0x30A0 + Math.random() * 96);
                 ctx.fillText(text, i * 20, drops[i] * 20);
-                
                 if (drops[i] * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
             }
@@ -269,19 +314,17 @@
         initMatrix();
         setInterval(drawMatrix, 50);
 
-        /* --- 2. LOGIKA AUDIO & NAVIGASI --- */
+        /* --- 2. LOGIKA UTAMA (AUDIO & NAVIGASI) --- */
         const startBtn = document.getElementById('start-btn');
         const overlay = document.getElementById('overlay');
         const mainContent = document.getElementById('main-content');
         const bgm = document.getElementById('bgm');
 
-        // Start Button Logic
+        // Tombol Start (Membuka Lockscreen & Play Musik)
         startBtn.addEventListener('click', () => {
-            // Play Audio
-            bgm.volume = 0.6;
+            bgm.volume = 0.6; // Volume 60%
             bgm.play().catch(e => console.log("Audio play failed:", e));
             
-            // Hide Overlay
             overlay.style.opacity = '0';
             setTimeout(() => {
                 overlay.style.display = 'none';
@@ -289,23 +332,20 @@
             }, 800);
         });
 
-        // Navigation Logic
+        // Navigasi Pindah Halaman
         function showSlide(id, btn) {
-            // Hide all slides
             document.querySelectorAll('.slide').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-            
-            // Show selected
             document.getElementById(id).classList.add('active');
             btn.classList.add('active');
         }
 
-        /* --- 3. DATA MATERI (Isi Deskripsi Di Sini) --- */
+        /* --- 3. DATA MATERI (Silakan Edit Teks Di Sini) --- */
         const materiData = {
-            'dm': '[ MASUKKAN DESKRIPSI DIGITAL MARKETING DI SINI ]',
-            'rb': '[ MASUKKAN DESKRIPSI RETAIL BUSINESS DI SINI ]',
-            'ps': '[ MASUKKAN DESKRIPSI PUBLIC SPEAKING DI SINI ]',
-            'web': '[ MASUKKAN DESKRIPSI WEB DEV DI SINI ]'
+            'dm': 'Strategi pemasaran menggunakan media digital (IG, TikTok, FB Ads) untuk menjangkau audiens secara luas dan efektif.',
+            'rb': 'Manajemen bisnis ritel mulai dari penataan produk (display), stok opname, hingga pelayanan prima kepada pelanggan.',
+            'ps': 'Seni berbicara di depan umum untuk meyakinkan audiens, presentasi produk, dan negosiasi bisnis.',
+            'web': 'Dasar pengembangan website menggunakan HTML, CSS, dan JavaScript untuk membuat toko online sendiri.'
         };
 
         function showDetail(btn, key) {
@@ -313,7 +353,6 @@
             btn.classList.add('active-comp');
             
             const output = document.getElementById('desc-output');
-            // Efek mengetik manual simpel
             output.innerHTML = `<span style="color:white;">>> LOADING DATA...</span>`;
             setTimeout(() => {
                 output.innerHTML = materiData[key] + '<span class="cursor">_</span>';
@@ -321,5 +360,4 @@
         }
     </script>
 </body>
-  </html>
-  
+</html>
