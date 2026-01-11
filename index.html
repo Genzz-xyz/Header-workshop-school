@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMK NURUL FALAH | SISTEM INFORMASI</title>
+    <title>SMK NURUL FALAH | SYSTEM V.FINAL</title>
     <style>
-        /* --- 1. CONFIG VISUAL (TEMA MATRIX) --- */
+        /* --- 1. CORE CONFIGURATION --- */
         :root {
-            --neon: #00FF41;          
-            --neon-dark: #003300;     
-            --bg-color: #000000;      
-            --glass: rgba(0, 10, 0, 0.9); 
+            --neon: #00FF41;          /* Hijau Matrix Utama */
+            --neon-glow: #008F11;     /* Hijau Glow Redup */
+            --bg-color: #050505;      /* Hitam Hampir Pekat */
+            --panel-bg: rgba(0, 20, 0, 0.85); /* Latar Panel Transparan */
             --font-main: 'Courier New', monospace;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+        }
 
         body {
             margin: 0; padding: 0;
@@ -25,118 +28,189 @@
             min-height: 100vh;
         }
 
-        /* --- 2. BACKGROUND --- */
-        canvas#matrix-bg { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.4; }
+        /* --- 2. LAYER 1: MATRIX BACKGROUND (High Contrast) --- */
+        canvas#matrix-bg { 
+            position: fixed; top: 0; left: 0; 
+            z-index: -1; /* Paling belakang */
+            opacity: 0.9; /* Kontras tinggi */
+        }
+        
+        /* Efek Garis TV (Scanlines) - pointer-events: none AGAR TEKS BISA DIKLIK */
         .scanlines { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
-            background-size: 100% 4px; pointer-events: none; z-index: 1; 
+            background-size: 100% 4px; 
+            pointer-events: none; /* KUNCI AGAR TIDAK MENGHALANGI KLIK */
+            z-index: 1; 
         }
 
-        /* --- 3. LOCKSCREEN (TAMPILAN AWAL) --- */
+        /* --- 3. LOCKSCREEN (Only Visual, No Audio Logic) --- */
         #overlay {
             position: fixed; inset: 0; background: black; z-index: 9999;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: opacity 0.8s ease-out;
+            transition: opacity 0.6s ease-out, visibility 0.6s;
             padding: 20px; text-align: center;
         }
-        .logo-lock { font-size: 3rem; margin-bottom: 15px; text-shadow: 0 0 10px var(--neon); }
-        
-        .btn-start {
-            border: 2px solid var(--neon); background: rgba(0, 255, 65, 0.1); color: var(--neon);
-            padding: 18px 45px; font-size: 1.1rem; font-weight: bold; letter-spacing: 2px;
-            cursor: pointer; text-transform: uppercase; box-shadow: 0 0 20px var(--neon-dark);
-            transition: 0.2s; margin-top: 30px; margin-bottom: 20px; border-radius: 5px;
+        .lock-icon { 
+            font-size: 4rem; margin-bottom: 20px; 
+            text-shadow: 0 0 20px var(--neon);
+            animation: pulse 2s infinite;
         }
-        .btn-start:active { background: var(--neon); color: black; box-shadow: 0 0 50px var(--neon); transform: scale(0.95); }
+        
+        .btn-enter {
+            border: 2px solid var(--neon); 
+            background: rgba(0, 255, 65, 0.05); 
+            color: var(--neon);
+            padding: 15px 50px; 
+            font-size: 1.2rem; font-weight: bold; letter-spacing: 3px;
+            cursor: pointer; text-transform: uppercase; 
+            box-shadow: 0 0 15px var(--neon-glow);
+            transition: 0.3s; margin-top: 30px; 
+            border-radius: 4px;
+        }
+        .btn-enter:hover {
+            background: var(--neon); color: black;
+            box-shadow: 0 0 40px var(--neon);
+        }
 
-        /* --- 4. LAYOUT UTAMA --- */
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* --- 4. LAYER 2: NEON PAGES (CONTAINER) --- */
         .container {
-            position: relative; z-index: 10;
+            position: relative; 
+            z-index: 10; /* Di atas scanlines */
             max-width: 900px; margin: 0 auto; padding: 20px;
             display: none; padding-bottom: 100px;
         }
+
+        /* Header dengan Efek Neon Strong */
         header {
-            text-align: center; border-bottom: 2px solid var(--neon);
-            padding: 20px; margin-bottom: 20px; background: var(--glass);
-            border-radius: 5px; position: relative;
-            box-shadow: 0 0 15px var(--neon-dark);
+            text-align: center; 
+            border: 1px solid var(--neon);
+            padding: 25px; margin-bottom: 25px; 
+            background: rgba(0, 10, 0, 0.9);
+            border-radius: 8px; 
+            box-shadow: 0 0 15px var(--neon-glow), inset 0 0 10px rgba(0, 255, 65, 0.1);
         }
         
-        h1 { margin: 0; font-size: 1.5rem; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
-        .subtitle { font-size: 0.9rem; font-weight: bold; border-top: 1px solid var(--neon-dark); display: inline-block; padding-top: 5px; color: #fff; }
+        h1 { margin: 0; font-size: 1.8rem; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 5px var(--neon); }
+        .subtitle { 
+            font-size: 1rem; font-weight: bold; margin-top: 10px; display: inline-block;
+            border-top: 2px solid var(--neon-glow); padding-top: 5px; color: #fff; 
+        }
 
         /* --- 5. NAVIGASI --- */
-        nav { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        nav { display: flex; justify-content: center; gap: 12px; margin-bottom: 25px; flex-wrap: wrap; }
         .nav-btn {
-            background: rgba(0, 20, 0, 0.6); color: var(--neon); border: 1px solid var(--neon-dark);
-            padding: 10px 15px; cursor: pointer; font-family: inherit; font-weight: bold; font-size: 0.8rem;
-            transition: 0.3s;
+            background: #001100; color: var(--neon); 
+            border: 1px solid var(--neon-glow);
+            padding: 12px 20px; cursor: pointer; 
+            font-family: inherit; font-weight: bold; font-size: 0.85rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
         }
         .nav-btn:hover, .nav-btn.active {
-            background: var(--neon); color: black; box-shadow: 0 0 10px var(--neon);
+            background: var(--neon); color: black; 
+            border-color: var(--neon);
+            box-shadow: 0 0 20px var(--neon);
+            transform: translateY(-2px);
         }
 
-        /* --- 6. KONTEN SLIDE --- */
+        /* --- 6. KONTEN SLIDE (PANEL UTAMA) --- */
         .slide {
-            display: none; background: rgba(0, 10, 0, 0.85); border: 1px solid var(--neon-dark);
-            padding: 25px; border-radius: 5px; animation: fadeIn 0.5s ease-out;
-            line-height: 1.6; font-size: 0.9rem; color: #e0e0e0;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            display: none; 
+            background: var(--panel-bg); 
+            border: 1px solid var(--neon); /* Border Neon */
+            padding: 30px; 
+            border-radius: 8px; 
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            line-height: 1.6; font-size: 0.95rem; color: #e0e0e0;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.15); /* Outer Glow */
         }
         .slide.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        @keyframes slideUp { 
+            from { opacity: 0; transform: translateY(30px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
         
         h2 { 
-            border-bottom: 1px solid var(--neon); padding-bottom: 10px; 
-            margin-top: 0; font-size: 1.3rem; color: var(--neon); margin-bottom: 15px;
-            text-shadow: 0 0 5px var(--neon-dark);
+            border-bottom: 2px solid var(--neon); padding-bottom: 10px; 
+            margin-top: 0; font-size: 1.4rem; color: var(--neon); margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--neon-glow);
         }
 
-        /* --- 7. MARQUEE (TEKS BERJALAN) --- */
+        /* --- 7. MARQUEE --- */
         .marquee-box {
-            border: 1px solid var(--neon-dark); padding: 10px;
-            background: rgba(0, 50, 0, 0.6); font-weight: bold; color: white;
-            margin-top: 25px; font-size: 1rem;
+            border: 1px dashed var(--neon-glow); padding: 12px;
+            background: rgba(0, 30, 0, 0.8); font-weight: bold; color: white;
+            margin-top: 25px; font-size: 1.1rem;
             text-transform: uppercase; letter-spacing: 2px;
+            box-shadow: inset 0 0 10px #000;
         }
 
-        /* --- 8. GALERI --- */
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; margin-top: 20px; }
+        /* --- 8. GALERI GRID --- */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; margin-top: 20px; }
         .gallery-item {
-            border: 1px solid var(--neon-dark); position: relative; height: 180px; overflow: hidden;
-            border-radius: 5px; transition: all 0.3s ease;
+            border: 1px solid var(--neon-glow); 
+            position: relative; height: 180px; overflow: hidden;
+            border-radius: 6px; transition: all 0.3s ease;
+            background: #000;
         }
-        .gallery-item:hover { border-color: var(--neon); transform: scale(1.02); box-shadow: 0 0 15px var(--neon); z-index: 2; }
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
+        .gallery-item:hover { 
+            border-color: var(--neon); 
+            transform: scale(1.03); 
+            box-shadow: 0 0 25px var(--neon-glow); 
+            z-index: 2;
+        }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; opacity: 0.8; }
+        .gallery-item:hover img { opacity: 1; }
+        
         .caption {
             position: absolute; bottom: 0; left: 0; width: 100%;
             background: rgba(0,0,0,0.9); color: var(--neon);
-            font-size: 0.65rem; padding: 5px; text-align: center; border-top: 1px solid var(--neon-dark);
+            font-size: 0.7rem; padding: 6px; text-align: center; 
+            border-top: 1px solid var(--neon-glow);
+            font-weight: bold;
         }
 
         /* --- 9. KOMPETENSI --- */
-        .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
         .comp-btn {
-            padding: 15px; border: 1px solid var(--neon-dark); background: rgba(0,20,0,0.3); 
-            color: var(--neon); cursor: pointer; text-align: left; font-family: inherit; font-weight: bold; font-size: 0.8rem;
+            padding: 15px; border: 1px solid var(--neon-glow); 
+            background: rgba(0, 20, 0, 0.5); 
+            color: var(--neon); cursor: pointer; text-align: left; 
+            font-family: inherit; font-weight: bold; font-size: 0.85rem;
+            transition: 0.2s;
         }
-        .comp-btn.active-comp { background: var(--neon); color: black; box-shadow: 0 0 10px var(--neon); }
-        .desc-box {
-            border: 1px dashed var(--neon); padding: 15px; min-height: 80px; background: rgba(0,0,0,0.3); font-size: 0.9rem; color: white;
+        .comp-btn:hover { background: rgba(0, 255, 65, 0.1); border-color: var(--neon); }
+        .comp-btn.active-comp { 
+            background: var(--neon); color: black; 
+            box-shadow: 0 0 15px var(--neon); 
         }
         
-        /* FOOTER AUTHOR LINK */
+        .desc-box {
+            border: 1px solid var(--neon); padding: 20px; min-height: 80px; 
+            background: rgba(0,0,0,0.6); font-size: 0.95rem; color: white;
+            border-left: 4px solid var(--neon);
+        }
+        
+        /* FOOTER */
         footer { 
-            text-align: center; margin-top: 50px; font-size: 0.8rem; opacity: 0.9; 
-            padding-bottom: 30px; border-top: 1px solid var(--neon-dark); padding-top: 20px; 
+            text-align: center; margin-top: 60px; font-size: 0.85rem; 
+            padding-bottom: 30px; border-top: 1px solid var(--neon-glow); padding-top: 25px; 
             color: #888;
         }
         .author-link {
             color: var(--neon); text-decoration: none; font-weight: bold;
-            border-bottom: 1px dashed var(--neon); transition: 0.3s;
+            padding: 5px 10px; border: 1px dashed var(--neon-glow);
+            transition: 0.3s; display: inline-block; margin-bottom: 10px;
         }
-        .author-link:hover { background: var(--neon); color: black; }
+        .author-link:hover { background: var(--neon); color: black; box-shadow: 0 0 10px var(--neon); }
     </style>
 </head>
 <body>
@@ -144,24 +218,18 @@
     <canvas id="matrix-bg"></canvas>
     <div class="scanlines"></div>
 
-    <audio id="bgm" loop>
-        <source src="https://files.catbox.moe/mhpnl7.mp3" type="audio/mpeg">
-    </audio>
-
     <div id="overlay">
-        <div class="logo-lock">🔒</div>
-        <h2 style="margin: 0; color: white;">PORTAL INFORMASI DIGITAL</h2>
-        <p style="margin-top: 5px; color: var(--neon); font-size: 0.9rem;">SMK NURUL FALAH</p>
+        <div class="lock-icon">🔒</div>
+        <h2 style="margin: 0; color: white; text-transform: uppercase; letter-spacing: 2px;">Sistem Informasi Digital</h2>
+        <p style="margin-top: 10px; color: var(--neon); font-size: 1.1rem;">SMK NURUL FALAH</p>
         
-        <button class="btn-start" id="start-btn">BUKA AKSES DATA</button>
-        
-        <p style="font-size: 0.7rem; color: #666;">Klik tombol di atas untuk masuk & memutar audio</p>
+        <button class="btn-enter" id="btn-enter">MASUK SYSTEM</button>
     </div>
 
     <div class="container" id="main-content">
         <header>
             <h1>SMK NURUL FALAH</h1>
-            <span class="subtitle">XI (BDP) PEMASARAN</span>
+            <div class="subtitle">XI (BDP) PEMASARAN</div>
         </header>
 
         <nav>
@@ -185,135 +253,137 @@
             </p>
             
             <div class="marquee-box">
-                <marquee scrollamount="10" direction="left">
-                    SMK NUFA JAYA &nbsp;&nbsp; /// &nbsp;&nbsp; SMK NUFA JAYA &nbsp;&nbsp; /// &nbsp;&nbsp; SMK NUFA JAYA
+                <marquee scrollamount="12" direction="left">
+                    SMK NUFA JAYA &nbsp;&nbsp; /// &nbsp;&nbsp; DISIPLIN - KOMPETEN - SIAP KERJA &nbsp;&nbsp; /// &nbsp;&nbsp; SMK NUFA JAYA
                 </marquee>
             </div>
         </div>
 
         <div id="visi" class="slide">
             <h2>VISI DAN MISI</h2>
-            <p><strong>VISI:</strong><br>
-            "Terwujudnya Lulusan SMK Nurul Falah yang Beriman, Bertakwa, Kompeten, Mandiri, dan Berwawasan Global di Kabupaten Lampung Timur."</p>
-            <hr style="border: 0; border-top: 1px solid var(--neon-dark); margin: 15px 0;">
-            <p><strong>MISI PROGRAM KEAHLIAN BDP:</strong></p>
-            <ul>
-                <li>Menyelenggarakan pendidikan vokasi yang terintegrasi dengan nilai-nilai keislaman dan teknologi terkini.</li>
-                <li>Membekali peserta didik dengan keterampilan <em>Digital Marketing</em> dan <em>E-Commerce</em> yang relevan dengan kebutuhan industri.</li>
+            <p style="color:white; font-weight:bold; margin-bottom:5px;">VISI:</p>
+            <p>"Terwujudnya Lulusan SMK Nurul Falah yang Beriman, Bertakwa, Kompeten, Mandiri, dan Berwawasan Global di Kabupaten Lampung Timur."</p>
+            
+            <hr style="border: 0; border-top: 1px dashed var(--neon-glow); margin: 20px 0;">
+            
+            <p style="color:white; font-weight:bold; margin-bottom:5px;">MISI PROGRAM KEAHLIAN BDP:</p>
+            <ul style="padding-left: 20px;">
+                <li style="margin-bottom: 10px;">Menyelenggarakan pendidikan vokasi yang terintegrasi dengan nilai-nilai keislaman dan teknologi terkini.</li>
+                <li style="margin-bottom: 10px;">Membekali peserta didik dengan keterampilan <em>Digital Marketing</em> dan <em>E-Commerce</em> yang relevan dengan kebutuhan industri.</li>
                 <li>Membangun jiwa kewirausahaan (Entrepreneurship) agar siswa mampu menciptakan lapangan kerja mandiri.</li>
             </ul>
         </div>
 
         <div id="prodi" class="slide">
             <h2>KOMPETENSI KEAHLIAN</h2>
-            <p style="margin-bottom: 15px; font-size: 0.8rem;">Modul pembelajaran Kelas XI BDP:</p>
+            <p style="margin-bottom: 15px; font-size: 0.85rem; color:#888;">Klik modul di bawah untuk detail:</p>
+            
             <div class="comp-grid">
                 <button class="comp-btn" onclick="showDetail(this, 'dm')">DIGITAL MARKETING</button>
                 <button class="comp-btn" onclick="showDetail(this, 'rb')">RETAIL BUSINESS</button>
                 <button class="comp-btn" onclick="showDetail(this, 'ps')">PUBLIC SPEAKING</button>
                 <button class="comp-btn" onclick="showDetail(this, 'kwu')">PRODUK KREATIF</button>
             </div>
+
             <div id="desc-output" class="desc-box">
-                [ Pilih materi di atas untuk melihat detail ]
+                // MENUNGGU INPUT SYSTEM...
             </div>
         </div>
 
         <div id="gallery" class="slide">
             <h2>DOKUMENTASI KEGIATAN</h2>
-            <p style="font-size: 0.7rem; color:#ccc; margin-bottom: 10px;">Arsip Foto Kegiatan Siswa BDP:</p>
+            <p style="font-size: 0.8rem; color:#888; margin-bottom: 15px;">Arsip Foto Kegiatan Siswa BDP:</p>
+            
             <div class="gallery-grid">
                 <div class="gallery-item">
-                    <img src="img/foto1.jpg" alt="Foto 1" onerror="this.src='https://via.placeholder.com/300?text=IMG+ERROR'">
+                    <img src="img/foto1.jpg" alt="Foto 1" onerror="this.src='https://via.placeholder.com/300x200/003300/00FF41?text=IMG+ERROR'">
                     <div class="caption">KEGIATAN KELAS XI BDP</div>
                 </div>
                 <div class="gallery-item">
-                    <img src="img/foto2.jpg" alt="Foto 2" onerror="this.src='https://via.placeholder.com/300?text=IMG+ERROR'">
+                    <img src="img/foto2.jpg" alt="Foto 2" onerror="this.src='https://via.placeholder.com/300x200/003300/00FF41?text=IMG+ERROR'">
                     <div class="caption">PENERIMAAN RAPORT</div>
                 </div>
                 <div class="gallery-item">
-                    <img src="img/foto3.jpg" alt="Foto 3" onerror="this.src='https://via.placeholder.com/300?text=IMG+ERROR'">
+                    <img src="img/foto3.jpg" alt="Foto 3" onerror="this.src='https://via.placeholder.com/300x200/003300/00FF41?text=IMG+ERROR'">
                     <div class="caption">KUNJUNGAN INDUSTRI</div>
                 </div>
                 <div class="gallery-item">
-                    <img src="img/foto4.jpg" alt="Foto 4" onerror="this.src='https://via.placeholder.com/300?text=IMG+ERROR'">
+                    <img src="img/foto4.jpg" alt="Foto 4" onerror="this.src='https://via.placeholder.com/300x200/003300/00FF41?text=IMG+ERROR'">
                     <div class="caption">KEGIATAN EKSTRAKURIKULER</div>
                 </div>
             </div>
         </div>
 
         <footer>
-            <div style="margin-bottom: 10px;">
-                <a href="https://wa.me/6283199753711" target="_blank" class="author-link">
-                    AUTHOR: ARLING
-                </a>
-            </div>
-            <div>
-                &copy; 2026 SMK NURUL FALAH
+            <a href="https://wa.me/6283199753711" target="_blank" class="author-link">
+                [ CONTACT AUTHOR: ARLING ]
+            </a>
+            <div style="margin-top: 10px; font-size: 0.75rem;">
+                &copy; 2026 SMK NURUL FALAH - SYSTEM V.FINAL
             </div>
         </footer>
     </div>
 
     <script>
-        /* --- MATRIX EFFECT --- */
+        /* --- 1. MATRIX ENGINE (KONTRAK & TAJAM) --- */
         const canvas = document.getElementById("matrix-bg");
         const ctx = canvas.getContext("2d");
         let drops = [];
+
         function initMatrix() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             drops = Array(Math.ceil(canvas.width / 20)).fill(1);
         }
+
         function drawMatrix() {
+            // Gunakan alpha kecil untuk jejak (trail) yang panjang
             ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#00FF41"; ctx.font = "15px monospace";
+            
+            ctx.fillStyle = "#00FF41"; // Warna Hijau Matrix Asli
+            ctx.font = "15px monospace";
+            
             for (let i = 0; i < drops.length; i++) {
                 const text = String.fromCharCode(0x30A0 + Math.random() * 96);
                 ctx.fillText(text, i * 20, drops[i] * 20);
-                if (drops[i] * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                
+                // Random reset agar terlihat acak
+                if (drops[i] * 20 > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
                 drops[i]++;
             }
         }
+
         window.addEventListener('resize', initMatrix);
         initMatrix();
         setInterval(drawMatrix, 50);
 
-        /* --- SISTEM AUDIO UNLOCK (FIX REDMI/ANDROID) --- */
-        const startBtn = document.getElementById('start-btn');
+        /* --- 2. SYSTEM LOGIC (SIMPLE & CLEAN) --- */
         const overlay = document.getElementById('overlay');
         const mainContent = document.getElementById('main-content');
-        const bgm = document.getElementById('bgm');
+        const enterBtn = document.getElementById('btn-enter');
 
-        const unlockSystem = () => {
-            // 1. Teknik Pancingan Audio (Wajib untuk HP Android)
-            bgm.volume = 1.0;
-            bgm.play().then(() => {
-                console.log("Audio unlocked successfully");
-            }).catch((e) => {
-                console.log("Audio context warning (normal)");
-            });
-
-            // 2. Buka Tampilan
+        // Transisi Masuk (Tanpa Audio)
+        enterBtn.addEventListener('click', () => {
             overlay.style.opacity = '0';
-            setTimeout(() => {
-                overlay.style.display = 'none';
-                mainContent.style.display = 'block';
-            }, 600);
-        };
+            overlay.style.visibility = 'hidden';
+            mainContent.style.display = 'block';
+        });
 
-        // Event Listener Responsif
-        startBtn.addEventListener('click', unlockSystem);
-        startBtn.addEventListener('touchstart', unlockSystem, {passive: true});
-
-        // NAVIGASI
+        // Navigasi Tab
         function showSlide(id, btn) {
+            // Hide all slides
             document.querySelectorAll('.slide').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            
+            // Show selected
             document.getElementById(id).classList.add('active');
             btn.classList.add('active');
         }
 
-        // DATA MATERI (LENGKAP)
+        // Data Materi
         const materiData = {
             'dm': 'Strategi pemasaran komprehensif menggunakan platform digital (Facebook Ads, Instagram, TikTok, Marketplace) untuk menjangkau audiens tertarget, meningkatkan brand awareness, dan mengoptimalkan konversi penjualan secara online.',
             'rb': 'Pengelolaan manajemen toko ritel modern yang mencakup teknik display produk (Visual Merchandising), manajemen persediaan (Stock Opname), administrasi transaksi (Kasir), serta standar pelayanan prima (Service Excellence).',
@@ -322,12 +392,16 @@
         };
 
         function showDetail(btn, key) {
+            // Reset active buttons
             document.querySelectorAll('.comp-btn').forEach(b => b.classList.remove('active-comp'));
             btn.classList.add('active-comp');
+            
             const output = document.getElementById('desc-output');
-            output.innerHTML = `<span style='color:var(--neon)'>Sedang memuat data...</span>`;
+            output.innerHTML = `<span style="color:var(--neon); animation: pulse 1s infinite;">>> PROCESSING DATA...</span>`;
+            
             setTimeout(() => {
                 output.innerHTML = materiData[key];
+                output.style.borderLeft = "4px solid var(--neon)";
             }, 300);
         }
     </script>
