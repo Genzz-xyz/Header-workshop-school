@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
     <style>
-        /* --- 1. CONFIG VISUAL --- */
+        /* --- 1. CONFIG VISUAL (TIDAK ADA PENGURANGAN) --- */
         :root {
             --neon: #0f0;             
             --neon-dim: #008F11;      
@@ -142,7 +142,6 @@
             box-shadow: 0 0 10px rgba(0, 255, 65, 0.05); line-height: 1.6; position: relative;
         }
         
-        /* HUD LATENCY DI POJOK SLIDE */
         .slide-hud {
             position: absolute; top: 5px; right: 10px;
             font-size: 0.6rem; color: var(--neon-dim); letter-spacing: 2px;
@@ -195,25 +194,12 @@
         }
         .author-link:hover { background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); }
 
-        /* --- 11. MUSIC CONTROL STYLE --- */
+        /* --- 11. MUSIC CONTROL --- */
         .music-control {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 45px;
-            height: 45px;
-            border: 1px solid var(--neon);
-            background: rgba(0, 0, 0, 0.8);
-            color: var(--neon);
-            display: none; 
-            justify-content: center;
-            align-items: center;
-            border-radius: 50%;
-            cursor: pointer;
-            z-index: 1000;
-            box-shadow: 0 0 10px var(--neon-dim);
-            transition: 0.3s;
-            font-size: 1.2rem;
+            position: fixed; bottom: 20px; right: 20px; width: 45px; height: 45px;
+            border: 1px solid var(--neon); background: rgba(0, 0, 0, 0.8); color: var(--neon);
+            display: none; justify-content: center; align-items: center; border-radius: 50%;
+            cursor: pointer; z-index: 1000; box-shadow: 0 0 10px var(--neon-dim); transition: 0.3s; font-size: 1.2rem;
         }
         .music-control:hover { box-shadow: 0 0 20px var(--neon); transform: scale(1.1); }
     </style>
@@ -221,7 +207,6 @@
 <body>
 
     <audio id="bgm" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" loop></audio>
-
     <canvas id="matrix-bg"></canvas>
     <div class="scanlines"></div>
 
@@ -303,26 +288,10 @@
         </div>
 
         <div id="gallery" class="slide">
-            <div class="slide-hud">Latency : <span class="lat-val">--</span>ms | SYSTEM-RUNNING</div>
+            <div class="slide-hud">Latency : <span class="lat-val">--</span>ms | DATABASE-SYNCED</div>
             <h2>GALERI KEGIATAN</h2>
-            <div class="gallery-grid">
-                <div class="gallery-item" onclick="AudioFX.click()">
-                    <img src="img/foto1.jpg" alt="1" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=IMG+ERROR'">
-                    <div class="caption">KEGIATAN KELAS XI BDP</div>
+            <div class="gallery-grid" id="gallery-container">
                 </div>
-                <div class="gallery-item" onclick="AudioFX.click()">
-                    <img src="img/foto2.jpg" alt="2" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=IMG+ERROR'">
-                    <div class="caption">PENERIMAAN RAPORT</div>
-                </div>
-                <div class="gallery-item" onclick="AudioFX.click()">
-                    <img src="img/foto3.jpg" alt="3" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=IMG+ERROR'">
-                    <div class="caption">KUNJUNGAN WISATA</div>
-                </div>
-                <div class="gallery-item" onclick="AudioFX.click()">
-                    <img src="img/foto4.jpg" alt="4" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=IMG+ERROR'">
-                    <div class="caption">KEGIATAN EKSTRAKURIKULER</div>
-                </div>
-            </div>
         </div>
 
         <footer>
@@ -334,99 +303,89 @@
     </div>
 
     <script>
+        /* ========================================================
+           DATABASE INTI - EDIT DI SINI (MUDAH UNTUK HP)
+           ======================================================== */
+        
+        // Cukup tambah/edit baris di dalam kurung siku [...]
+        // Format: { file: 'namagambar.jpg', caption: 'Keterangan' },
+        const DATABASE_FOTO = [
+            { file: 'foto1.jpg', caption: 'KEGIATAN KELAS XI BDP' },
+            { file: 'foto2.jpg', caption: 'PENERIMAAN RAPORT' },
+            { file: 'foto3.jpg', caption: 'KUNJUNGAN WISATA' },
+            { file: 'foto4.jpg', caption: 'KEGIATAN EKSTRAKURIKULER' },
+            { file: 'foto5.jpg', caption: 'ULANGAN SEMESTER' },
+            // Tambahkan baris baru di bawah sini jika ada foto baru
+            // { file: 'foto5.jpg', caption: 'JUDUL KEGIATAN BARU' } 
+        ];
+
+        // Deskripsi Materi (Tersimpan aman di sini)
+        const DATABASE_MATERI = {
+            'dm': 'Strategi pemasaran komprehensif menggunakan platform digital (Facebook Ads, Instagram, TikTok, Marketplace) untuk menjangkau audiens tertarget, meningkatkan brand awareness, dan mengoptimalkan konversi penjualan secara online.',
+            'rb': 'Pengelolaan manajemen toko ritel modern yang mencakup teknik display produk (Visual Merchandising), manajemen persediaan (Stock Opname), administrasi transaksi (Kasir), serta standar pelayanan prima (Service Excellence).',
+            'ps': 'Pengembangan soft-skill komunikasi bisnis untuk keperluan presentasi produk, negosiasi dengan klien, serta kemampuan Public Speaking yang persuasif dan percaya diri di hadapan audiens profesional.',
+            'kwu': 'Implementasi mata pelajaran Produk Kreatif dan Kewirausahaan (PKK) dimana siswa dibimbing untuk merancang, memproduksi, dan memasarkan produk inovatif serta menyusun rencana bisnis (Business Plan) yang layak jual.'
+        };
+
+        /* ========================================================
+           SYSTEM ENGINE (JANGAN DIUBAH AGAR GRAFIK TETAP JALAN)
+           ======================================================== */
+
         class AudioEngine {
-            constructor() {
-                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-            }
+            constructor() { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); }
             resume() { if (this.ctx.state === 'suspended') this.ctx.resume(); }
             hover() {
-                this.resume();
-                const o = this.ctx.createOscillator();
-                const g = this.ctx.createGain();
-                o.type = 'sine';
-                o.frequency.setValueAtTime(1000, this.ctx.currentTime);
+                this.resume(); const o = this.ctx.createOscillator(); const g = this.ctx.createGain();
+                o.type = 'sine'; o.frequency.setValueAtTime(1000, this.ctx.currentTime);
                 o.frequency.exponentialRampToValueAtTime(2000, this.ctx.currentTime + 0.05);
-                g.gain.setValueAtTime(0.05, this.ctx.currentTime);
-                g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
-                o.connect(g); g.connect(this.ctx.destination);
-                o.start(); o.stop(this.ctx.currentTime + 0.05);
+                g.gain.setValueAtTime(0.05, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
+                o.connect(g); g.connect(this.ctx.destination); o.start(); o.stop(this.ctx.currentTime + 0.05);
             }
             click() {
-                this.resume();
-                const o = this.ctx.createOscillator();
-                const g = this.ctx.createGain();
-                o.type = 'square';
-                o.frequency.setValueAtTime(200, this.ctx.currentTime);
+                this.resume(); const o = this.ctx.createOscillator(); const g = this.ctx.createGain();
+                o.type = 'square'; o.frequency.setValueAtTime(200, this.ctx.currentTime);
                 o.frequency.exponentialRampToValueAtTime(50, this.ctx.currentTime + 0.1);
-                // Beep dikeraskan 0.4
-                g.gain.setValueAtTime(0.4, this.ctx.currentTime);
-                g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
-                o.connect(g); g.connect(this.ctx.destination);
-                o.start(); o.stop(this.ctx.currentTime + 0.1);
+                g.gain.setValueAtTime(0.4, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
+                o.connect(g); g.connect(this.ctx.destination); o.start(); o.stop(this.ctx.currentTime + 0.1);
             }
         }
 
         class TextScramble {
-            constructor(el) {
-                this.el = el;
-                this.chars = '!<>-_\\/[]{}—=+*^?#________';
-                this.update = this.update.bind(this);
-            }
+            constructor(el) { this.el = el; this.chars = '!<>-_\\/[]{}—=+*^?#________'; this.update = this.update.bind(this); }
             setText(newText) {
-                const oldText = this.el.innerText;
-                const length = Math.max(oldText.length, newText.length);
-                const promise = new Promise((resolve) => this.resolve = resolve);
-                this.queue = [];
+                const oldText = this.el.innerText; const length = Math.max(oldText.length, newText.length);
+                const promise = new Promise((resolve) => this.resolve = resolve); this.queue = [];
                 for (let i = 0; i < length; i++) {
-                    const from = oldText[i] || '';
-                    const to = newText[i] || '';
-                    const start = Math.floor(Math.random() * 40);
-                    const end = start + Math.floor(Math.random() * 40);
+                    const from = oldText[i] || ''; const to = newText[i] || '';
+                    const start = Math.floor(Math.random() * 40); const end = start + Math.floor(Math.random() * 40);
                     this.queue.push({ from, to, start, end });
                 }
-                cancelAnimationFrame(this.frameRequest);
-                this.frame = 0;
-                this.update();
-                return promise;
+                cancelAnimationFrame(this.frameRequest); this.frame = 0; this.update(); return promise;
             }
             update() {
-                let output = '';
-                let complete = 0;
+                let output = ''; let complete = 0;
                 for (let i = 0, n = this.queue.length; i < n; i++) {
                     let { from, to, start, end, char } = this.queue[i];
                     if (this.frame >= end) { complete++; output += to; } 
                     else if (this.frame >= start) {
-                        if (!char || Math.random() < 0.28) {
-                            char = this.chars[Math.floor(Math.random() * this.chars.length)];
-                            this.queue[i].char = char;
-                        }
+                        if (!char || Math.random() < 0.28) { char = this.chars[Math.floor(Math.random() * this.chars.length)]; this.queue[i].char = char; }
                         output += `<span style="color:#008F11">${char}</span>`;
                     } else { output += from; }
                 }
                 this.el.innerHTML = output;
-                if (complete === this.queue.length) { this.resolve(); } 
-                else { this.frameRequest = requestAnimationFrame(this.update); this.frame++; }
+                if (complete === this.queue.length) { this.resolve(); } else { this.frameRequest = requestAnimationFrame(this.update); this.frame++; }
             }
         }
 
         class MatrixBg {
             constructor() {
-                this.canvas = document.getElementById("matrix-bg");
-                this.ctx = this.canvas.getContext("2d");
-                this.resize();
-                window.addEventListener('resize', () => this.resize());
-                setInterval(() => this.draw(), 50);
+                this.canvas = document.getElementById("matrix-bg"); this.ctx = this.canvas.getContext("2d");
+                this.resize(); window.addEventListener('resize', () => this.resize()); setInterval(() => this.draw(), 50);
             }
-            resize() {
-                this.canvas.width = window.innerWidth;
-                this.canvas.height = window.innerHeight;
-                this.drops = Array(Math.ceil(this.canvas.width / 20)).fill(1);
-            }
+            resize() { this.canvas.width = window.innerWidth; this.canvas.height = window.innerHeight; this.drops = Array(Math.ceil(this.canvas.width / 20)).fill(1); }
             draw() {
-                this.ctx.fillStyle = "rgba(0, 0, 0, 0.1)"; 
-                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-                this.ctx.fillStyle = "#00ff41"; 
-                this.ctx.font = "14px monospace";
+                this.ctx.fillStyle = "rgba(0, 0, 0, 0.1)"; this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.fillStyle = "#00ff41"; this.ctx.font = "14px monospace";
                 for (let i = 0; i < this.drops.length; i++) {
                     const text = String.fromCharCode(0x30A0 + Math.random() * 96);
                     this.ctx.fillText(text, i * 20, this.drops[i] * 20);
@@ -445,31 +404,35 @@
             musicBtn: document.getElementById('music-btn'),
             musicIcon: document.getElementById('music-icon'),
 
-            materi: {
-                'dm': 'Strategi pemasaran komprehensif menggunakan platform digital (Facebook Ads, Instagram, TikTok, Marketplace) untuk menjangkau audiens tertarget, meningkatkan brand awareness, dan mengoptimalkan konversi penjualan secara online.',
-                'rb': 'Pengelolaan manajemen toko ritel modern yang mencakup teknik display produk (Visual Merchandising), manajemen persediaan (Stock Opname), administrasi transaksi (Kasir), serta standar pelayanan prima (Service Excellence).',
-                'ps': 'Pengembangan soft-skill komunikasi bisnis untuk keperluan presentasi produk, negosiasi dengan klien, serta kemampuan Public Speaking yang persuasif dan percaya diri di hadapan audiens profesional.',
-                'kwu': 'Implementasi mata pelajaran Produk Kreatif dan Kewirausahaan (PKK) dimana siswa dibimbing untuk merancang, memproduksi, dan memasarkan produk inovatif serta menyusun rencana bisnis (Business Plan) yang layak jual.'
-            },
-
             enter: function() {
                 AudioFX.click();
-                
-                // Volume basis 0.6
                 this.bgm.volume = 0.6;
-
-                // Start BGM
                 this.bgm.play().catch(e => console.log("BGM Play Autoplay prevented."));
                 this.musicBtn.style.display = 'flex';
                 
-                // Mulai Latency Monitor
-                this.startLatencyMonitor();
+                // Render Gallery dari Database
+                this.renderGallery();
 
+                this.startLatencyMonitor();
                 document.getElementById('overlay').style.opacity = '0';
                 setTimeout(() => {
                     document.getElementById('overlay').style.display = 'none';
                     document.getElementById('main-content').style.display = 'block';
                 }, 500);
+            },
+
+            renderGallery: function() {
+                const container = document.getElementById('gallery-container');
+                let htmlContent = '';
+                DATABASE_FOTO.forEach(item => {
+                    htmlContent += `
+                        <div class="gallery-item" onclick="AudioFX.click()">
+                            <img src="${item.file}" alt="img" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=IMG+ERROR'">
+                            <div class="caption">${item.caption}</div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = htmlContent;
             },
 
             startLatencyMonitor: function() {
@@ -513,7 +476,8 @@
                 AudioFX.click();
                 document.querySelectorAll('.comp-btn').forEach(b => b.classList.remove('active-comp'));
                 btn.classList.add('active-comp');
-                Scrambler.setText(this.materi[key]);
+                // Mengambil dari Database Materi yang baru
+                Scrambler.setText(DATABASE_MATERI[key]);
             }
         };
     </script>
