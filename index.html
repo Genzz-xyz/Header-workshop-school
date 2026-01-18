@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SMK NURUL FALAH - THE GLIMPSE OF FUTURE</title>
     
-    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+   <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ccircle cx="50" cy="50" r="45" fill="black" stroke="white" stroke-width="4"/%3E%3Cline x1="5" y1="50" x2="95" y2="50" stroke="white" stroke-width="2"/%3E%3Cline x1="50" y1="5" x2="50" y2="95" stroke="white" stroke-width="2"/%3E%3Cellipse cx="50" cy="50" rx="10" ry="45" fill="none" stroke="white" stroke-width="3"%3E%3Canimate attributeName="rx" values="0;44;0" dur="2s" repeatCount="indefinite"/%3E%3C/ellipse%3E%3C/svg%3E'>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -24,6 +24,12 @@
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; cursor: crosshair; }
 
+        /* SCROLLBAR CUSTOM (HITAM & NEON) */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--neon-dim); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--neon); }
+
         body {
             margin: 0; padding: 0;
             background-color: var(--bg-color);
@@ -36,7 +42,7 @@
         }
 
         /* --- 2. BACKGROUND (CRYSTAL CLEAR) --- */
-        canvas#matrix-bg { position: fixed; top: 0; left: 0; z-index: -2; opacity: 0.9; }
+        canvas#matrix-bg { position: fixed; top: 0; left: 0; z-index: -2; opacity: 0.85; }
         .scanlines { display: none; } 
 
         /* --- 3. GLITCH HEADER (AGRESIF) --- */
@@ -141,10 +147,9 @@
             transition: border-color 0.5s;
         }
         
-        /* [FIX] LATENCY VISIBILITY: Gunakan warna utama neon dengan transparansi */
         .slide-hud {
             position: absolute; top: 5px; right: 10px;
-            font-size: 0.6rem; color: var(--neon); opacity: 0.8; /* LEBIH TERANG */
+            font-size: 0.6rem; color: var(--neon); opacity: 0.8;
             letter-spacing: 2px; transition: color 0.5s;
         }
 
@@ -162,7 +167,7 @@
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; margin-top: 20px; }
         .gallery-item {
             border: 1px solid var(--neon-dim); position: relative; height: 180px; overflow: hidden;
-            transition: 0.3s; background: #000;
+            transition: 0.3s; background: #000; cursor: pointer;
         }
         .gallery-item:hover { border-color: var(--neon); transform: scale(1.02); z-index: 2; box-shadow: 0 0 20px var(--neon-dim); }
         .gallery-item img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: 0.3s; filter: grayscale(80%); }
@@ -196,7 +201,6 @@
         }
         .author-link:hover { background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); }
         
-        /* [FIX] SYSTEM LOG: Lebih terang dengan transparansi */
         #system-log { color: var(--neon) !important; opacity: 0.7; }
 
         /* --- 11. CONTROLS --- */
@@ -214,7 +218,7 @@
 </head>
 <body>
 
-    <audio id="bgm" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" loop></audio>
+    <audio id="bgm" src="bgm.mp3" loop></audio>
     <canvas id="matrix-bg"></canvas>
     <div class="scanlines"></div>
 
@@ -276,15 +280,17 @@
         </div>
 
         <footer>
-            <a href="https://wa.me/6283199753711" target="_blank" class="author-link" onclick="AudioFX.click()">CONTACT AUTHOR : ARLING</a>
+            <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
+                <a href="https://wa.me/6283199753711" target="_blank" rel="noopener noreferrer" class="author-link" onclick="AudioFX.click()">CONTACT AUTHOR : ARLING</a>
+                <a href="https://vm.tiktok.com/ZSHoaESGQ25J7-202tt/" target="_blank" rel="noopener noreferrer" class="author-link" onclick="AudioFX.click()">TIKTOK SMK OFFICIAL</a>
+            </div>
+            
             <div id="system-log" style="margin-top: 18px; font-size: 0.7rem;">Initializing...</div>
             <div style="margin-top: 5px;">&copy; 2026 SMK NURUL FALAH</div>
         </footer>
     </div>
 
     <script>
-        // --- 1. DATABASES ---
-        
         const DATABASE_FOTO = [
             { file: 'foto1.jpg', caption: 'KEGIATAN SEKOLAH' },
             { file: 'foto2.jpg', caption: 'PENERIMAAN RAPORT' },
@@ -328,8 +334,6 @@
             'kwu': 'Implementasi mata pelajaran Produk Kreatif dan Kewirausahaan (PKK) dimana siswa dibimbing untuk merancang, memproduksi, dan memasarkan produk inovatif serta menyusun rencana bisnis (Business Plan) yang layak jual.'
         };
 
-        // --- 2. ENGINE ---
-
         class AudioEngine {
             constructor() { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); }
             resume() { if (this.ctx.state === 'suspended') this.ctx.resume(); }
@@ -370,11 +374,8 @@
                 el.innerHTML = htmlContent;
                 const textNodes = [];
                 function findTextNodes(node) {
-                    if (node.nodeType === 3) {
-                        if(node.textContent.trim().length > 0) textNodes.push(node);
-                    } else {
-                        for (let child of node.childNodes) findTextNodes(child);
-                    }
+                    if (node.nodeType === 3 && node.textContent.trim().length > 0) textNodes.push(node);
+                    else if (node.nodeType === 1) for (let child of node.childNodes) findTextNodes(child);
                 }
                 findTextNodes(el);
                 textNodes.forEach(node => {
@@ -384,8 +385,8 @@
                     const interval = setInterval(() => {
                         let output = '';
                         for(let i=0; i<length; i++) {
-                            if(frame >= i) { output += originalText[i]; } 
-                            else { output += this.chars[Math.floor(Math.random() * this.chars.length)]; }
+                            if(frame >= i) output += originalText[i];
+                            else output += this.chars[Math.floor(Math.random() * this.chars.length)];
                         }
                         node.textContent = output.substring(0, frame + 1);
                         if(frame >= length) {
@@ -402,8 +403,8 @@
                 const interval = setInterval(() => {
                     let output = '';
                     for(let i=0; i<length; i++) {
-                        if(frame >= i) { output += newText[i]; } 
-                        else { output += this.chars[Math.floor(Math.random() * this.chars.length)]; }
+                        if(frame >= i) output += newText[i];
+                        else output += this.chars[Math.floor(Math.random() * this.chars.length)];
                     }
                     el.innerHTML = output.substring(0, frame + 1) + (frame < length ? '_' : '');
                     if(frame >= length) clearInterval(interval);
@@ -438,7 +439,9 @@
             }
             setColor(c) { this.color = c; }
             draw() {
-                this.ctx.fillStyle = "rgba(0, 0, 0, 0.1)"; this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                // warna
+                this.ctx.fillStyle = "rgba(0, 0, 0, 0.15)"; 
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
                 this.ctx.strokeStyle = this.color;
                 this.ripples.forEach((r, i) => {
                     this.ctx.beginPath(); this.ctx.arc(r.x, r.y, r.size, 0, Math.PI * 2);
@@ -468,15 +471,41 @@
             musicIcon: document.getElementById('music-icon'),
             log: document.getElementById('system-log'),
             colorBtn: document.getElementById('color-btn'),
-            
-            // [FIX] COLOR TUNING: Menyeimbangkan warna redup agar terlihat jelas
             colorIndex: 0,
             colors: [
-                { neon: '#0f0', dim: '#008F11', hex: '#0f0' },       // Hijau
-                { neon: '#00f0ff', dim: '#008F8F', hex: '#00f0ff' }, // Biru (Dim diterangkan)
-                { neon: '#FF0000', dim: '#CC0000', hex: '#FF0000' }, // Merah (Dim diterangkan)
-                { neon: '#ffff00', dim: '#808000', hex: '#ffff00' }  // Kuning
+                { neon: '#0f0', dim: '#008F11', hex: '#0f0' },       
+                { neon: '#00f0ff', dim: '#008F8F', hex: '#00f0ff' }, 
+                { neon: '#FF0000', dim: '#CC0000', hex: '#FF0000' }, 
+                { neon: '#ffff00', dim: '#808000', hex: '#ffff00' }  
             ],
+            baseOffset: 4000,
+            currentVisits: 0, 
+
+            syncVisitorCount: function() {
+                return new Promise(resolve => {
+                    const timeout = new Promise(r => setTimeout(r, 800)); 
+                    const fetchAPI = fetch('https://api.countapi.xyz/hit/smknufabdp2026/visits')
+                        .then(res => res.json())
+                        .then(data => {
+                            this.currentVisits = data.value + this.baseOffset;
+                            return true;
+                        })
+                        .catch(() => false);
+
+                    Promise.race([fetchAPI, timeout]).then((result) => {
+                        if (result !== true) this.useLocalFallback();
+                        resolve();
+                    });
+                });
+            },
+
+            useLocalFallback: function() {
+                let localCount = localStorage.getItem('nufa_visits');
+                if(!localCount) localCount = 1;
+                else localCount = parseInt(localCount) + 1;
+                localStorage.setItem('nufa_visits', localCount);
+                this.currentVisits = localCount + this.baseOffset;
+            },
 
             loadSavedTheme: function() {
                 const savedIndex = localStorage.getItem('nufa_theme');
@@ -494,23 +523,51 @@
             },
 
             initLog: function() {
-                const logs = ["Scanning ports...", "Fetching assets...", "Verifying handshake...", "Decrypting...", "System stable.", "Monitoring..."];
-                let i = 0; setInterval(() => { this.log.innerText = ">> " + logs[i]; i = (i + 1) % logs.length; }, 2000);
+                const logs = [
+                    "Scanning connection...", 
+                    "Encrypting connection...", 
+                    `Global Access: ${this.currentVisits} Users`, 
+                    "System stable.", 
+                    "Monitoring network..."
+                ];
+                let i = 0; 
+                setInterval(() => { 
+                    this.log.innerText = ">> " + logs[i]; 
+                    i = (i + 1) % logs.length; 
+                }, 2500); 
             },
 
-            enter: function() {
+            enter: async function() {
                 AudioFX.click();
-                this.bgm.volume = 0.6; this.bgm.play().catch(() => {});
+                const playPromise = this.bgm.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => { console.log("Audio autoplay prevented or missing."); });
+                }
+                this.bgm.volume = 0.8;
                 
+                const btnEnter = document.querySelector('.btn-enter');
+                const oldText = btnEnter.innerText;
+                btnEnter.innerText = "CONNECTING..."; 
+
+                await this.syncVisitorCount();
+                
+                btnEnter.innerText = oldText; 
                 this.loadSavedTheme();
                 
-                this.musicBtn.style.display = 'flex'; this.colorBtn.style.display = 'flex';
-                this.renderGallery(); this.startLatency(); this.initLog();
+                this.musicBtn.style.display = 'flex'; 
+                this.colorBtn.style.display = 'flex';
+                
+                this.renderGallery(); 
+                this.startLatency(); 
+                this.initLog(); 
                 
                 Scrambler.write(document.getElementById('home-content'), DATABASE_CONTENT.home);
 
                 document.getElementById('overlay').style.opacity = '0';
-                setTimeout(() => { document.getElementById('overlay').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }, 500);
+                setTimeout(() => { 
+                    document.getElementById('overlay').style.display = 'none'; 
+                    document.getElementById('main-content').style.display = 'block'; 
+                }, 500);
             },
 
             toggleColor: function() {
@@ -524,7 +581,7 @@
                 const container = document.getElementById('gallery-container');
                 container.innerHTML = DATABASE_FOTO.map(item => `
                     <div class="gallery-item" onclick="AudioFX.click()">
-                        <img src="${item.file}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=IMG+ERROR'">
+                        <img src="${item.file}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200/001100/00FF41?text=IMG+MISSING'">
                         <div class="caption">${item.caption}</div>
                     </div>
                 `).join('');
@@ -533,10 +590,17 @@
             startLatency: function() {
                 const latEl = document.querySelectorAll('.lat-val');
                 setInterval(() => {
-                    const start = Date.now();
-                    fetch(window.location.href, { method: 'HEAD' }).then(() => {
-                        latEl.forEach(el => el.innerText = Date.now() - start);
-                    }).catch(() => latEl.forEach(el => el.innerText = Math.floor(Math.random()*50)+20));
+                    const start = performance.now();
+                    // REAL PING DENGAN CACHE BUSTING (Agar tidak 0ms)
+                    fetch(window.location.href + '?t=' + Math.random(), { method: 'HEAD', cache: 'no-store' })
+                        .then(() => {
+                            const end = performance.now();
+                            latEl.forEach(el => el.innerText = Math.round(end - start));
+                        })
+                        .catch(() => {
+                            // Jika Offline atau Error, Tampilkan 'OFF'
+                            latEl.forEach(el => el.innerText = "OFF  ");
+                        });
                 }, 3000);
             },
 
